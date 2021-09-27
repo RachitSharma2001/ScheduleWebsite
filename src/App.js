@@ -6,15 +6,16 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    /*fetch('/time').then(res => res.json()).then(data => {
+    fetch('http://localhost:5000/time').then(res => res.json()).then(data => {
+      console.log("Here is the current time: " + data.time);
       setCurrentTime(data.time);
-    });*/
-    fetch('http://localhost:5000/time').then(res => {
+    });
+    /*fetch('http://localhost:5000/time').then(res => {
       console.log("Result: " + res);
       let resultJson = res.json();
       console.log("Result json: " + resultJson);
       console.log("Time: " + resultJson.time);
-    });
+    });*/
   }, []);
 
   return (
