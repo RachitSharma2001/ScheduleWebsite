@@ -9,8 +9,11 @@ function App() {
     /*fetch('/time').then(res => res.json()).then(data => {
       setCurrentTime(data.time);
     });*/
-    fetch('http://127.0.0.1:5000/time').then(res => {
-      console.log(res.url);
+    fetch('http://localhost:5000/time').then(res => {
+      console.log("Result: " + res);
+      let resultJson = res.json();
+      console.log("Result json: " + resultJson);
+      console.log("Time: " + resultJson.time);
     });
   }, []);
 
