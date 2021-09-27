@@ -13,14 +13,13 @@ from flask import Flask
 
 app = Flask(__name__)'''
 
-@app.route("/time", methods=["GET", "POST", "OPTIONS"])
+@app.route("/getmessage", methods=["GET", "POST", "OPTIONS"])
 def get_current_time():
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
     elif request.method == "POST" or request.method == "GET":  # Actual Cors request from front end
-        jsonTime = jsonify({'time': time.time()})
-        print("We are in the backend, here is jsonTime: ", jsonTime)
-        return _corsify_actual_response(jsonTime)
+        jsonMessage = jsonify({'message': "Hi from backend"})
+        return _corsify_actual_response(jsonMessage)
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
@@ -34,11 +33,3 @@ def _build_cors_preflight_response():
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
-
-'''
-@app.route('/time')
-def get_current_time():
-    print("We have been called!")
-    #return "Hey from backend"
-    return jsonify({'time': time.time()})
-'''
