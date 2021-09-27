@@ -1,18 +1,8 @@
-import time
 from flask import jsonify, request, make_response
-from app import app
-'''
-@app.route('/getmessage')
-def homepage():
-    print("We came to the backend!")
-    return {"message": "From backend"
-    
-    }
-    import time
-from flask import Flask
+from app import app, db
+from models import Entry
 
-app = Flask(__name__)'''
-
+''' Code that successfully communicates to backend ''' 
 @app.route("/getmessage", methods=["GET", "POST", "OPTIONS"])
 def get_current_time():
     if request.method == "OPTIONS": # CORS preflight
@@ -33,3 +23,13 @@ def _build_cors_preflight_response():
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+''' Code to run stuff on the database ''' 
+@app.route('/addEntry')
+# This is what the front end will send us -> user will enter entry content and we need to pass it in 
+# to the backend
+@app.route('/addEntry/<entryContent>', methods=["GET", "POST"])
+def addEntry():
+    newEntry = Entry(entryContent="Do HW")
+    db.session.add(newEntry)
+    db.session.commit(newEntry)
