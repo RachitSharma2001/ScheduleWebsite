@@ -1,6 +1,6 @@
 from flask import jsonify, request, make_response
 from app import app, db
-from models import Entry
+from app.models import Todo
 
 ''' Code that successfully communicates to backend ''' 
 @app.route("/getmessage", methods=["GET", "POST", "OPTIONS"])
@@ -25,11 +25,13 @@ def _corsify_actual_response(response):
     return response
 
 ''' Code to run stuff on the database ''' 
-@app.route('/addEntry')
+@app.route('/getEntry')
 # This is what the front end will send us -> user will enter entry content and we need to pass it in 
 # to the backend
-@app.route('/addEntry/<entryContent>', methods=["GET", "POST"])
-def addEntry():
-    newEntry = Entry(entryContent="Do HW")
-    db.session.add(newEntry)
-    db.session.commit(newEntry)
+@app.route('/getEntry/<todoId>', methods=["GET", "POST"])
+def addEntry(todoId=None):
+    print("This is the passed in todoId: ", todoId)
+    todo = Todo.query.get(todoId)
+    print("Todo entry content: ", todo.getEntries()[0].entryContent)
+    return todo.getEntries()[0].entryContent
+    
