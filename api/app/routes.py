@@ -1,6 +1,6 @@
 from flask import jsonify, request, make_response
 from app import app, db
-from app.models import Todo
+from app.models import Todo, Entry
 
 ''' Code that successfully communicates to backend ''' 
 @app.route("/getmessage", methods=["GET", "POST", "OPTIONS"])
@@ -36,12 +36,17 @@ def getEntry(todoId=None):
     return todo.getEntries()[0].entryContent
 
 @app.route('/addEntry')
-@app.route('/addEntry/<entryTitle>', methods=["GET", "POST", "OPTIONS"])
-def addEntry(entryTitle=None):
+@app.route('/addEntry/<entryTitle>/<todoId>', methods=["GET", "POST", "OPTIONS"])
+def addEntry(entryTitle=None, todoId=None):
     print("Entry title called: ", entryTitle)
+    print("Todo id called: ", todoId)
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
     elif request.method == "POST":  # Actual Cors request from front end
+        # Create an Entry and add it to db
+        newEntry = Entry(entryContent=entryTitle, referenceTodo=todoId)
+        db.session.add(newEntry)
+        db.session.commit()
         jsonMessage = jsonify({'message': "Success"})
         return _corsify_actual_response(jsonMessage)
     else:

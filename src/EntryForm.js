@@ -5,13 +5,14 @@ class EntryForm extends React.Component {
         super();
         this.state = {title: ""};
         this.url = props.url;
+        this.todoId = props.todoId;
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleSubmit(event){
         event.preventDefault();
-        let postUrl = this.url + this.state.title;
+        let postUrl = this.url + this.state.title + "/" + this.todoId;
         console.log("Title: " + this.state.title);
         console.log("Posted url: " + postUrl);
         fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {

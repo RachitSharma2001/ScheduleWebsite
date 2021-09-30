@@ -32,7 +32,7 @@ function App() {
         {addTodo && <Popup content={<>
           <p> Hi this is a popup! </p> 
           <Button id="EntryAdd" buttonLabel="Add Entry" height="200px" width="200px" onClick={toggleAddEntry}></Button>
-          {addEntry && <EntryForm url="http://localhost:5000/addEntry/"/>}
+          {addEntry && <EntryForm url="http://localhost:5000/addEntry/" todoId="1"/>}
         </>} handleClose={toggleAddTodo}></Popup>}
       </header>
     </div>

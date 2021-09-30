@@ -23,4 +23,4 @@ class Entry(db.Model):
     referenceTodo = db.Column(db.Integer, db.ForeignKey('todo.id'))
 
     def __repr__(self):
-        return 'Entry {}'.format(self.id)
+        return 'Entry {}'.format(self.entryContent)
