@@ -14,7 +14,7 @@ class EntryForm extends React.Component {
         let postUrl = this.url + this.state.title;
         console.log("Title: " + this.state.title);
         console.log("Posted url: " + postUrl);
-        fetch(postUrl).then(res => res.json()).then(data => {
+        fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {
             console.log("Returned message: " + data.message);
         });
     }

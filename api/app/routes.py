@@ -41,7 +41,7 @@ def addEntry(entryTitle=None):
     print("Entry title called: ", entryTitle)
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
-    elif request.method == "GET":  # Actual Cors request from front end
+    elif request.method == "POST":  # Actual Cors request from front end
         jsonMessage = jsonify({'message': "Success"})
         return _corsify_actual_response(jsonMessage)
     else:
