@@ -21,6 +21,13 @@ function App() {
     setAddEntry(!addEntry);
   };
 
+  useEffect(() =>{
+    fetch("http://localhost:5000/getEntries/1").then(res => res.json()).then(data => {
+      console.log("Returned message: " + data.message);
+    });
+  });
+  
+
   // For creating the popup object we do: <Popup content = {... some html ...} handeClose={}>
   // what is content -> content something we define in Popup js -> when we render a popup in popup.js
   // we do {props.content} which shows its variable called content

@@ -9,9 +9,15 @@ class Todo(db.Model):
     dateOfTodo = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     entries = db.relationship('Entry', lazy='dynamic', backref='todo')
 
-    def getEntries(self):
-        return self.entries.all()
+    def createEntriesList(self, entries):
+        entryList = []
+        for entry in entries:
+            entryList.append(entry.entryContent)
+        return entryList
 
+    def getEntries(self):
+        return self.createEntriesList(self.entries.all())
+    
     def __repr__(self):
         return 'Todo {}'.format(self.id)
 
@@ -23,4 +29,4 @@ class Entry(db.Model):
     referenceTodo = db.Column(db.Integer, db.ForeignKey('todo.id'))
 
     def __repr__(self):
-        return 'Entry {}'.format(self.entryContent)
+        return 'Entry: {}'.format(self.entryContent)
