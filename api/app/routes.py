@@ -1,8 +1,20 @@
 from flask import jsonify, request, make_response
+import json
+import pprint
 from app import app, db
 from app.models import Todo, Entry
 
-def createJsonObject(title, body):
+def createJsonObject(title, body, givenList=False):
+    if givenList:
+        print("Title, body, jsonify: ", title, body)
+        pprint.pprint({title:body})
+        return jsonify({title:body})
+        '''print("Title and body: ", title, body)
+        origJson = '{{}:{}}'.format(title, body)
+        bodyList = json.loads(origJson)
+        for entry in bodyList[title]:
+            print("An entry in body list: ", entry)'''
+
     return jsonify({title:body})
 
 def _build_cors_preflight_response():
@@ -26,8 +38,8 @@ def getEntry(todoId=None):
         print("This is the passed in todoId: ", todoId)
         todo = Todo.query.get(todoId)
         print("Todo entry content: ", todo.getEntries())
-        print("Json object created from the entries: ", createJsonObject("EntryList", todo.getEntries()))
-        return createJsonObject("EntryList", todo.getEntries())
+        print("Json object created from the entries: ", createJsonObject("EntryList", todo.getEntries(), givenList=True))
+        return _corsify_actual_response(createJsonObject("EntryList", todo.getEntries(), givenList=True))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
