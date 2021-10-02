@@ -1,6 +1,5 @@
 import React from 'react';
-
-class EntryForm extends React.Component {
+class EntryForm extends TodoEntries {
     constructor(props) {
         super();
         this.state = {title: ""};
