@@ -4,17 +4,7 @@ import pprint
 from app import app, db
 from app.models import Todo, Entry
 
-def createJsonObject(title, body, givenList=False):
-    if givenList:
-        print("Title, body, jsonify: ", title, body)
-        pprint.pprint({title:body})
-        return jsonify({title:body})
-        '''print("Title and body: ", title, body)
-        origJson = '{{}:{}}'.format(title, body)
-        bodyList = json.loads(origJson)
-        for entry in bodyList[title]:
-            print("An entry in body list: ", entry)'''
-
+def createJsonObject(title, body):
     return jsonify({title:body})
 
 def _build_cors_preflight_response():
@@ -35,19 +25,14 @@ def getEntry(todoId=None):
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
     elif request.method == "GET":
-        print("This is the passed in todoId: ", todoId)
         todo = Todo.query.get(todoId)
-        print("Todo entry content: ", todo.getEntries())
-        print("Json object created from the entries: ", createJsonObject("EntryList", todo.getEntries(), givenList=True))
-        return _corsify_actual_response(createJsonObject("EntryList", todo.getEntries(), givenList=True))
+        return _corsify_actual_response(createJsonObject("EntryList", todo.getEntries()))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
 @app.route('/addEntry')
 @app.route('/addEntry/<entryTitle>/<todoId>', methods=["GET", "POST", "OPTIONS"])
 def addEntry(entryTitle=None, todoId=None):
-    print("Entry title called: ", entryTitle)
-    print("Todo id called: ", todoId)
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
     elif request.method == "POST":  # Actual Cors request from front end
@@ -56,5 +41,18 @@ def addEntry(entryTitle=None, todoId=None):
         db.session.add(newEntry)
         db.session.commit()
         return _corsify_actual_response(createJsonObject("message", "Success"))
+    else:
+        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+
+@app.route('/addTodo', methods=["POST", "OPTIONS"])
+def addTodo():
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
+    elif request.method == "POST":  #  Cors request from front end
+        todoId = len(Todo.query.all()) + 1
+        newTodo = Todo(id=todoId)
+        db.session.add(newTodo)
+        db.session.commit()
+        return _corsify_actual_response(createJsonObject("message", todoId))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))

@@ -7,13 +7,17 @@ import './App.css';
 import './Popup.css';
 
 function App() {
-  // Have a use Effect to get the todos from past days
-  // useState(value) creates these two getter, setter variables such that its initial value is value
   const [addTodo, setAddTodo] = useState(false);
   const [addEntry, setAddEntry] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
 
   const toggleAddTodo = () => {
+    // If the todo button was clicked, create a new todo database object
+    if(!addTodo){
+      fetch("http://localhost:5000/addTodo", {method: "POST"}).then(res => res.json()).then(data => {
+        console.log("The todo id: " + data.message);
+      });
+    }
     setAddTodo(!addTodo);
   };
 
@@ -21,15 +25,12 @@ function App() {
     setAddEntry(!addEntry);
   };
 
-  useEffect(() =>{
+  /*useEffect(() =>{
     fetch("http://localhost:5000/getEntries/1").then(res => res.json()).then(data => {
       console.log("Returned message: " + data.EntryList);
     });
-  });
+  });*/
   
-  // For creating the popup object we do: <Popup content = {... some html ...} handeClose={}>
-  // what is content -> content something we define in Popup js -> when we render a popup in popup.js
-  // we do {props.content} which shows its variable called content
   return (
     <div className="App">
       <header className="App-header">
