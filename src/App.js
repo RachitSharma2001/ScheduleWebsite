@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import Popup from './Popup.js';
 import Button from './Button.js';
-//import EntryForm from './EntryForm.js';
-import TodoEntries from './TodoEntries.js';
+import EntryForm from './EntryForm.js';
 import './App.css';
 import './Popup.css';
 
 function App() {
   const [addTodo, setAddTodo] = useState(false);
   const [addEntry, setAddEntry] = useState(false);
+  const [entryList, setEntryList] = useState([]);
 
   const toggleAddTodo = () => {
     // If the todo button was clicked, create a new todo database object
@@ -20,6 +20,13 @@ function App() {
     }
     setAddTodo(!addTodo);
   };
+
+  const updateEntryList = (entryText) => {
+    console.log("Entry list updated with text: " + entryText);
+    const newList = entryList.concat(entryText);
+    setEntryList(newList)
+    console.log("Entry list: " + entryList)
+  }
 
   const toggleAddEntry = () => {
     setAddEntry(!addEntry);
@@ -37,7 +44,8 @@ function App() {
         <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={toggleAddTodo}></Button>
         
         {addTodo && <Popup content={<>
-          <TodoEntries url="http://localhost:5000/addEntry/" todoId="1"/>
+          <ul> {entryList.map((entry) => <p> {entry} </p>)} </ul>
+          <EntryForm url="http://localhost:5000/addEntry/" todoId="1" submitCallBack={updateEntryList}/>
         </>} handleClose={toggleAddTodo}></Popup>}
       </header>
     </div>
