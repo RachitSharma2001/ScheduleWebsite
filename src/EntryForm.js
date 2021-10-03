@@ -13,7 +13,7 @@ class EntryForm extends React.Component {
     }
     handleSubmit(event){
         event.preventDefault();
-        this.submitCallBack(this.todoId);
+        this.submitCallBack(this.state.title);
         let postUrl = this.url + this.state.title + "/" + this.todoId;
         fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {
             console.log("Returned message: " + data.message);

@@ -28,26 +28,9 @@ function App() {
     }
   }
 
-  const updateEntryList = (todoId) => {
-    /*const newList = entryList.slice();
-    console.log("New list after slice: ");
-    printList(newList);
-    newList.push({id: entryList.length, text: entryText});
-    console.log("New list after pushing item: ");
-    printList(newList);
-    setEntryList(newList);
-    console.log("Now entry list length: " + entryList.length);*/
-    console.log("Todo id passed in: " + todoId);
-    fetch("http://localhost:5000/getEntries/" + todoId, {method: "GET"}).then(res => res.json()).then(data => {
-      console.log("Message: " + data.EntryList);
-      const newList = [];
-      for(let i = 0; i < data.EntryList.length; i++){
-        newList.push({id: i, text: data.EntryList[i]})
-      }
-      //printList(newList);
-      setEntryList(newList);
-      console.log("Entry list length after push: " + entryList.length);
-    });
+  const updateEntryList = (entryText) => {
+    console.log("Entry list length: " + entryList.length);
+    setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
   }
 
   const toggleAddEntry = () => {
