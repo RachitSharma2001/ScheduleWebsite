@@ -56,3 +56,17 @@ def addTodo():
         return _corsify_actual_response(createJsonObject("message", todoId))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+
+# Backend function to return list of entries of all the todos
+@app.route('/getTodos', methods=["GET", "OPTIONS"])
+def getTodos():
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
+    elif request.method == "GET":   #  Cors request from front end
+        todoList = Todo.query.all()
+        todoEntryList = []
+        for todo in todoList:
+            todoEntryList.append(todo.getEntries())
+        return _corsify_actual_response(createJsonObject("todoList", todoEntryList))
+    else:
+        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
