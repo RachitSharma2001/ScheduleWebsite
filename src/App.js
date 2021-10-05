@@ -26,9 +26,20 @@ function App() {
 
   useEffect(() => {
     fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
-      console.log("The todo list length: " + data.todoList.length)
+      // Add the todos with > 0 entries
+      let tempTodoList = [];
+      for(let i = 0; i < data.todoList.length; i++){
+        let todoEntries = [];
+        for(let j = 0; j < data.todoList[i].length; j++){
+          todoEntries.push(data.todoList[i][j]);
+        }
+        if(todoEntries.length == 0) continue;
+        tempTodoList.push(todoEntries);
+      }
+      
+      setTodoList(todoList => tempTodoList);
     });
-  });
+  }, []);
 
   const updateEntryList = (entryText) => {
     console.log("Entry list length: " + entryList.length);
@@ -44,6 +55,7 @@ function App() {
       <header className="App-header">
         <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={toggleAddTodo}></Button>
         
+        {todoList.map((todos) => <div className="todoBordBox"> {todos} </div>)}
         <div className="todoBordBox"> <p> Stuff </p> <p> Other Stuff </p> </div>
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
