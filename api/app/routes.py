@@ -53,7 +53,7 @@ def addTodo():
         newTodo = Todo(id=todoId)
         db.session.add(newTodo)
         db.session.commit()
-        return _corsify_actual_response(createJsonObject("message", todoId))
+        return _corsify_actual_response(createJsonObject("todoId", todoId))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 

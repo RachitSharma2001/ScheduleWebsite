@@ -15,6 +15,7 @@ class EntryForm extends React.Component {
         event.preventDefault();
         this.submitCallBack(this.state.title);
         let postUrl = this.url + this.state.title + "/" + this.todoId;
+        console.log("Adding entry with todo id: " + this.todoId);
         fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {
             console.log("Returned message: " + data.message);
         });
