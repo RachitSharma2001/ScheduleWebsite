@@ -8,9 +8,9 @@ import './Popup.css';
 import './TodoBox.css';
 
 function updateTodos(todoList, setTodoList){
-  //console.log("Updating todos!");
+  // Get all the todos with greater than 0 entries
+  // And update the todo list with them
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
-      // Add the todos with > 0 entries
       let tempTodoList = [];
       for(let i = 0; i < data.todoList.length; i++){
         let todoEntries = [];
@@ -21,7 +21,6 @@ function updateTodos(todoList, setTodoList){
         tempTodoList.push(todoEntries);
       }
       
-      //console.log("Done, this is temp todo list: " + tempTodoList);
       setTodoList(todoList => tempTodoList);
   });
 }
@@ -42,11 +41,9 @@ function App() {
   }, []);
 
   const toggleAddTodo = () => {
-    // If the todo button was clicked, create a new todo database object
+    // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
     if(!addTodo){
-      //console.log("We are adding a todo!");
       fetch("http://localhost:5000/addTodo", {method: "POST"}).then(res => res.json()).then(data => {
-        console.log("Adding a todo of id: " + data.todoId);
         // update current todo id
         setTodoId(data.todoId.toString());
         // Wait for the todo id to be created before adding the todo
