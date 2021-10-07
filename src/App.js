@@ -3,25 +3,31 @@ import logo from './logo.svg';
 import Popup from './Popup.js';
 import Button from './Button.js';
 import EntryForm from './EntryForm.js';
+import TodoEntry from './TodoEntry.js';
 import './App.css';
 import './Popup.css';
 import './TodoBox.css';
 
 function updateTodos(todoList, setTodoList){
   // Get all the todos with greater than 0 entries
-  // And update the todo list with them
+  // And update the todo and date list with them
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
       let tempTodoList = [];
+      let tempDateList = [];
+
       for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
         for(let j = 0; j < data.todoList[i].length; j++){
           todoEntries.push({id: j, text: data.todoList[i][j]});
         }
         if(todoEntries.length == 0) continue;
-        tempTodoList.push(todoEntries);
+        console.log("Id list: " + data.idList[i]);
+        tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i]});
+        //tempDateList.push(data.dateList[i]);
       }
       
       setTodoList(todoList => tempTodoList);
+      //setDateList(dateList => tempDateList);
   });
 }
 
@@ -32,6 +38,8 @@ function App() {
   const [entryList, setEntryList] = useState([]);
   // List of entries for each todo
   const [todoList, setTodoList] = useState([]);
+  // List of dates corresponding to each todo
+  //const [dateList, setDateList] = useState([]);
   // Current todo id (needed as a parameter to entryform)
   const [currTodoId, setTodoId] = useState("-1");
   
@@ -59,10 +67,6 @@ function App() {
     setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
   }
 
-  const toggleAddEntry = () => {
-    setAddEntry(!addEntry);
-  };
-
   const todoAdded = () => {
     // Close popup
     popupClosed();
@@ -75,7 +79,8 @@ function App() {
       <header className="App-header">
         <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
-        {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo.id + 1}. {todo.text} </p>)} </div>)}
+        {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
+          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>

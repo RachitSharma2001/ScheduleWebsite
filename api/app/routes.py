@@ -6,10 +6,12 @@ from app.models import Todo, Entry
 from datetime import datetime
 
 ''' Functions to create jsons given parameters '''
-def createJsonObject(title, body, secondTitle=None, secondBody=None):
-    if secondTitle == None:
+def createJsonObject(title, body, secondTitle=None, secondBody=None, thirdTitle=None, thirdBody=None):
+    if secondTitle == None and thirdTitle == None:
         return jsonify({title:body})
-    return jsonify({title:body, secondTitle:secondBody})
+    if thirdTitle == None:
+        return jsonify({title:body, secondTitle:secondBody})
+    return jsonify({title:body, secondTitle:secondBody, thirdTitle:thirdBody})
 
 def _build_cors_preflight_response():
     response = make_response()
@@ -84,9 +86,11 @@ def getTodos():
         todoList = Todo.query.all()
         todoEntryList = []
         dateList = []
+        idList = []
         for todo in todoList:
             todoEntryList.append(todo.getEntries())
             dateList.append(todo.getDate())
-        return _corsify_actual_response(createJsonObject("todoList", todoEntryList, "dateList", dateList))
+            idList.append(todo.id)
+        return _corsify_actual_response(createJsonObject("idList", idList, "todoList", todoEntryList, "dateList", dateList))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
