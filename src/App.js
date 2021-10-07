@@ -74,7 +74,7 @@ function App() {
       <header className="App-header">
         <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={toggleAddTodo}/>
         
-        {todoList.map((todos) => <div className="todoBordBox"> {todos} </div>)}
+        {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo} </p>)} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
