@@ -12,7 +12,7 @@ function updateTodos(todoList, setTodoList){
   // And update the todo list with them
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
       let tempTodoList = [];
-      for(let i = 0; i < data.todoList.length; i++){
+      for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
         for(let j = 0; j < data.todoList[i].length; j++){
           todoEntries.push({id: j, text: data.todoList[i][j]});
