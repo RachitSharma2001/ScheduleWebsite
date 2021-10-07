@@ -13,6 +13,8 @@ class EntryForm extends React.Component {
     }
     handleSubmit(event){
         event.preventDefault();
+        // Empty the input field
+        document.getElementById("EntrySubmit").value="";
         this.submitCallBack(this.state.title);
         let postUrl = this.url + this.state.title + "/" + this.todoId;
         fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {
@@ -24,7 +26,7 @@ class EntryForm extends React.Component {
     }
     render() {
         return (<form onSubmit={this.handleSubmit}>
-            <input type="Text" onChange={this.handleTitleChange}/>
+            <input type="Text" onChange={this.handleTitleChange} id="EntrySubmit"/>
             <input type="submit" value="Submit"/>
         </form>);
     };

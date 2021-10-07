@@ -40,7 +40,7 @@ function App() {
     updateTodos(todoList, setTodoList);
   }, []);
 
-  const toggleAddTodo = () => {
+  const popupClosed = () => {
     // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
     if(!addTodo){
       fetch("http://localhost:5000/addTodo", {method: "POST"}).then(res => res.json()).then(data => {
@@ -51,6 +51,7 @@ function App() {
       });
     }else{
       setAddTodo(!addTodo);
+      setEntryList([]);
     }
   };
 
@@ -64,7 +65,7 @@ function App() {
 
   const todoAdded = () => {
     // Close popup
-    toggleAddTodo();
+    popupClosed();
     // Call function to update the todos
     updateTodos(todoList, setTodoList);
   };
@@ -72,14 +73,14 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={toggleAddTodo}/>
+        <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={popupClosed}/>
         
         {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo.id + 1}. {todo.text} </p>)} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
           <Button id="finishedAdding" buttonLabel="Done" height="200px" width="200px" onClick={todoAdded}/>
-        </>} handleClose={toggleAddTodo}></Popup>}
+        </>} handleClose={popupClosed}></Popup>}
       </header>
     </div>
   );
