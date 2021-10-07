@@ -73,7 +73,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={popupClosed}/>
+        <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
         {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo.id + 1}. {todo.text} </p>)} </div>)}
         {addTodo && <Popup content={<>

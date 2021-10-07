@@ -2,7 +2,7 @@ import React from 'react';
 
 const Button = props => {
     return (
-        <button id={props.id} onClick={props.onClick} height={props.height} width={props.width}>
+        <button id={props.id} onClick={props.onClick} style={props.style}>
             {props.buttonLabel}
         </button>
     );
