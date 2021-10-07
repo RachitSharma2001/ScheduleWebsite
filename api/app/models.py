@@ -15,6 +15,9 @@ class Todo(db.Model):
             entryList.append(entry.entryContent)
         return entryList
 
+    def getDate(self):
+        return self.dateOfTodo.strftime("%D")
+
     def getEntries(self):
         return self.createEntriesList(self.entries.all())
     

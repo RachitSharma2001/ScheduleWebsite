@@ -3,9 +3,13 @@ import json
 import pprint
 from app import app, db
 from app.models import Todo, Entry
+from datetime import datetime
 
-def createJsonObject(title, body):
-    return jsonify({title:body})
+''' Functions to create jsons given parameters '''
+def createJsonObject(title, body, secondTitle=None, secondBody=None):
+    if secondTitle == None:
+        return jsonify({title:body})
+    return jsonify({title:body, secondTitle:secondBody})
 
 def _build_cors_preflight_response():
     response = make_response()
@@ -50,7 +54,9 @@ def addTodo():
         return _build_cors_preflight_response()
     elif request.method == "POST":  #  Cors request from front end
         todoId = len(Todo.query.all()) + 1
-        newTodo = Todo(id=todoId)
+        date = datetime.now()
+        #print("Adding todo with date: " + date.strftime("%M/%D"))
+        newTodo = Todo(id=todoId, dateOfTodo=date)
         db.session.add(newTodo)
         db.session.commit()
         return _corsify_actual_response(createJsonObject("todoId", todoId))
@@ -65,8 +71,10 @@ def getTodos():
     elif request.method == "GET":   #  Cors request from front end
         todoList = Todo.query.all()
         todoEntryList = []
+        dateList = []
         for todo in todoList:
             todoEntryList.append(todo.getEntries())
-        return _corsify_actual_response(createJsonObject("todoList", todoEntryList))
+            dateList.append(todo.getDate())
+        return _corsify_actual_response(createJsonObject("todoList", todoEntryList, "dateList", dateList))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
