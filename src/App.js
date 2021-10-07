@@ -15,7 +15,7 @@ function updateTodos(todoList, setTodoList){
       for(let i = 0; i < data.todoList.length; i++){
         let todoEntries = [];
         for(let j = 0; j < data.todoList[i].length; j++){
-          todoEntries.push(data.todoList[i][j]);
+          todoEntries.push({id: j, text: data.todoList[i][j]});
         }
         if(todoEntries.length == 0) continue;
         tempTodoList.push(todoEntries);
@@ -74,7 +74,7 @@ function App() {
       <header className="App-header">
         <Button id="TodoAdd" buttonLabel="Add Todo for a day" height="200px" width="200px" onClick={toggleAddTodo}/>
         
-        {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo} </p>)} </div>)}
+        {todoList.map((todos) => <div className="todoBordBox"> {todos.map((todo) => <p> {todo.id + 1}. {todo.text} </p>)} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
