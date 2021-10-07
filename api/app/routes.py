@@ -48,6 +48,18 @@ def addEntry(entryTitle=None, todoId=None):
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
+# Cross out an entry associated with a given todo
+@app.route('/crossOutEntry/<todoId>/<entryId>', methods=["GET", "POST", "OPTIONS"])
+def crossOutEntry(todoId, entryId):
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
+    elif request.method == "POST" or request.method == "GET":  # Actual Cors request from front end
+        entry = Todo.query.get(int(todoId)).getEntry(int(entryId))
+        entry.setCrossedOut()
+        return _corsify_actual_response(createJsonObject("message", "Success"))
+    else:
+        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+
 @app.route('/addTodo', methods=["POST", "OPTIONS"])
 def addTodo():
     if request.method == "OPTIONS": # CORS preflight

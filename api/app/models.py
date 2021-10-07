@@ -12,7 +12,7 @@ class Todo(db.Model):
     def createEntriesList(self, entries):
         entryList = []
         for entry in entries:
-            entryList.append(entry.entryContent)
+            entryList.append([entry.entryContent, entry.crossedOut])
         return entryList
 
     def getDate(self):
@@ -20,6 +20,9 @@ class Todo(db.Model):
 
     def getEntries(self):
         return self.createEntriesList(self.entries.all())
+
+    def getEntry(self, entryId):
+        return self.entries.__getitem__(entryId)
     
     def __repr__(self):
         return 'Todo {}'.format(self.id)
@@ -28,8 +31,12 @@ class Todo(db.Model):
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     entryContent = db.Column(db.String(MAXCHARS))
+    crossedOut = db.Column(db.Boolean)
     # shows which todo this entry is apart of
     referenceTodo = db.Column(db.Integer, db.ForeignKey('todo.id'))
+
+    def setCrossedOut(self):
+        self.crossedOut = not self.crossedOut
 
     def __repr__(self):
         return 'Entry: {}'.format(self.entryContent)
