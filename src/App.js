@@ -18,10 +18,13 @@ function updateTodos(todoList, setTodoList){
       for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
         for(let j = 0; j < data.todoList[i].length; j++){
-          todoEntries.push({id: j, text: data.todoList[i][j]});
+          let crossedOut = "";
+          if(data.todoList[i][j][1] == "True"){
+            crossedOut = "line-through";
+          }
+          todoEntries.push({id: j, text: data.todoList[i][j][0], crossedOut: crossedOut});
         }
         if(todoEntries.length == 0) continue;
-        console.log("Id list: " + data.idList[i]);
         tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i]});
         //tempDateList.push(data.dateList[i]);
       }
@@ -80,7 +83,7 @@ function App() {
         <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id}/> )} </div>)}
+          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/"/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>

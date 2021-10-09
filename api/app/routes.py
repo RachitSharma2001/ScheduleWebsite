@@ -6,12 +6,14 @@ from app.models import Todo, Entry
 from datetime import datetime
 
 ''' Functions to create jsons given parameters '''
-def createJsonObject(title, body, secondTitle=None, secondBody=None, thirdTitle=None, thirdBody=None):
+def createJsonObject(title, body, secondTitle=None, secondBody=None, thirdTitle=None, thirdBody=None, fourthTitle=None, fourthBody=None):
     if secondTitle == None and thirdTitle == None:
         return jsonify({title:body})
     if thirdTitle == None:
         return jsonify({title:body, secondTitle:secondBody})
-    return jsonify({title:body, secondTitle:secondBody, thirdTitle:thirdBody})
+    if fourthTitle == None:
+        return jsonify({title:body, secondTitle:secondBody, thirdTitle:thirdBody})
+    return jsonify({title:body, secondTitle:secondBody, thirdTitle:thirdBody, fourthTitle:fourthBody})
 
 def _build_cors_preflight_response():
     response = make_response()
@@ -58,6 +60,7 @@ def crossOutEntry(todoId, entryId):
     elif request.method == "POST" or request.method == "GET":  # Actual Cors request from front end
         entry = Todo.query.get(int(todoId)).getEntry(int(entryId))
         entry.setCrossedOut()
+        db.session.commit()
         return _corsify_actual_response(createJsonObject("message", "Success"))
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
@@ -87,6 +90,7 @@ def getTodos():
         todoEntryList = []
         dateList = []
         idList = []
+        crossedOutList = []
         for todo in todoList:
             todoEntryList.append(todo.getEntries())
             dateList.append(todo.getDate())

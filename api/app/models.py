@@ -12,7 +12,8 @@ class Todo(db.Model):
     def createEntriesList(self, entries):
         entryList = []
         for entry in entries:
-            entryList.append([entry.entryContent, entry.crossedOut])
+            print("Entry text, crossed out: ", entry.entryContent, entry.getCrossedOut())
+            entryList.append([entry.entryContent, entry.getCrossedOut()])
         return entryList
 
     def getDate(self):
@@ -35,8 +36,12 @@ class Entry(db.Model):
     # shows which todo this entry is apart of
     referenceTodo = db.Column(db.Integer, db.ForeignKey('todo.id'))
 
+    def getCrossedOut(self):
+        return str(self.crossedOut)
+
     def setCrossedOut(self):
-        self.crossedOut = not self.crossedOut
+        self.crossedOut = True
+        print("In models, we have crossed out entry!")
 
     def __repr__(self):
-        return 'Entry: {}'.format(self.entryContent)
+        return 'Entry: {}'.format(self.id)

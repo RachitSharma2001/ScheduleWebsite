@@ -3,18 +3,19 @@ import React from 'react';
 class TodoEntry extends React.Component {
     constructor(props){
         super();
-        console.log(props.text + ", " + props.id)
-        this.state = {text: props.text, todoId: props.todoId, entryId: props.entryId};
+        this.state = {text: props.text, todoId: props.todoId, entryId: props.entryId, crossOut: props.crossOut};
 
+        this.backendUrl = props.backendUrl;
         this.entryCrossedOut = this.entryCrossedOut.bind(this);
     }
 
     entryCrossedOut(){
-        console.log("Todo, entry id: " + this.state.todoId + " " + this.state.entryId);
+        this.setState({crossOut:"line-through"});
+        fetch(this.backendUrl + this.state.todoId + "/" + this.state.entryId, {method:"POST"});
     }
 
     render(){
-        return (<div> <p> {this.state.text} </p> <button onClick={this.entryCrossedOut}>X</button></div>)
+        return (<div> <p style={{textDecoration:this.state.crossOut}}> {this.state.text} </p> <button onClick={this.entryCrossedOut}>X</button></div>)
     }
 }
 
