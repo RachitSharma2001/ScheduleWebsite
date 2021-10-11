@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import Popup from './Popup.js';
 import Button from './Button.js';
 import EntryForm from './EntryForm.js';
-import TodoEntry from './TodoEntry.js';
+//import TodoEntry from './TodoEntry.js';
 import './App.css';
 import './Popup.css';
 import './TodoBox.css';
@@ -11,6 +11,7 @@ import './TodoBox.css';
 function updateTodos(todoList, setTodoList){
   // Get all the todos with greater than 0 entries
   // And update the todo and date list with them
+  console.log("Going to make fetch to update todos");
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
       let tempTodoList = [];
       let tempDateList = [];
@@ -26,13 +27,22 @@ function updateTodos(todoList, setTodoList){
         }
         if(todoEntries.length == 0) continue;
         tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i]});
-        //tempDateList.push(data.dateList[i]);
       }
       
       setTodoList(todoList => tempTodoList);
-      //setDateList(dateList => tempDateList);
   });
 }
+
+
+function TodoEntry(props){
+  const setCrossedOut = (e) => {
+    fetch(props.backendUrl + props.todoId + "/" + props.entryId, {method:"POST"}).then(res => res.json()).then(data => {
+      updateTodos(props.todoList, props.setTodoList);
+    });
+  }
+  return (<div> <p style={{textDecoration:props.crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
+}
+
 
 function App() {
   const [addTodo, setAddTodo] = useState(false);
@@ -67,6 +77,7 @@ function App() {
   };
 
   const updateEntryList = (entryText) => {
+    console.log("Updating!");
     setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
   }
 
@@ -83,7 +94,7 @@ function App() {
         <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/"/> )} </div>)}
+          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>

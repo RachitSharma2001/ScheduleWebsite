@@ -12,7 +12,6 @@ class Todo(db.Model):
     def createEntriesList(self, entries):
         entryList = []
         for entry in entries:
-            print("Entry text, crossed out: ", entry.entryContent, entry.getCrossedOut())
             entryList.append([entry.entryContent, entry.getCrossedOut()])
         return entryList
 
@@ -41,7 +40,6 @@ class Entry(db.Model):
 
     def setCrossedOut(self):
         self.crossedOut = True
-        print("In models, we have crossed out entry!")
 
     def __repr__(self):
         return 'Entry: {}'.format(self.id)

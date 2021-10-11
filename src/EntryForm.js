@@ -13,6 +13,7 @@ class EntryForm extends React.Component {
     }
     handleSubmit(event){
         event.preventDefault();
+        console.log("Updating!")
         // Empty the input field
         document.getElementById("EntrySubmit").value="";
         this.submitCallBack(this.state.title);
