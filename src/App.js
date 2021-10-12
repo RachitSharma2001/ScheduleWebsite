@@ -35,12 +35,21 @@ function updateTodos(todoList, setTodoList){
 
 
 function TodoEntry(props){
+  const propsCrossOut = useState(props.crossOut)[0];
+  const [crossOut, setCrossOut] = useState(propsCrossOut);
+  useEffect(() => {
+    console.log("Props cross out has changed at todo id: " + props.todoId);
+    setCrossOut(propsCrossOut);
+  }, [propsCrossOut]);
   const setCrossedOut = (e) => {
     fetch(props.backendUrl + props.todoId + "/" + props.entryId, {method:"POST"}).then(res => res.json()).then(data => {
-      updateTodos(props.todoList, props.setTodoList);
+      //updateTodos(props.todoList, props.setTodoList);
+      setCrossOut("line-through");
+      //console.log("Todo list at todoId, entryId: " + props.todoList[props.todoId]);
+      //(props.todoList, props.setTodoList, props.todoId);
     });
   }
-  return (<div> <p style={{textDecoration:props.crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
+  return (<div> <p style={{textDecoration:crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
 }
 
 
