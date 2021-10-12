@@ -15,7 +15,7 @@ function updateTodos(todoList, setTodoList){
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
       let tempTodoList = [];
       let tempDateList = [];
-
+      let numItemsAdded = 0;
       for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
         for(let j = 0; j < data.todoList[i].length; j++){
@@ -26,30 +26,37 @@ function updateTodos(todoList, setTodoList){
           todoEntries.push({id: j, text: data.todoList[i][j][0], crossedOut: crossedOut});
         }
         if(todoEntries.length == 0) continue;
-        tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i]});
+        tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i], index: numItemsAdded});
+        numItemsAdded++;
       }
+
       
+      console.log("Temp todo list at 0: " + tempTodoList[0]);
+      console.log("Temp todo list entry cross out at 0, 0: " + tempTodoList[0].entries[0].crossedOut)
       setTodoList(todoList => tempTodoList);
   });
 }
 
+function changeTodoList(oldTodoList, newTodoList, setTodoList){
+  setTodoList(oldTodoList => newTodoList);
+}
 
 function TodoEntry(props){
-  const propsCrossOut = useState(props.crossOut)[0];
-  const [crossOut, setCrossOut] = useState(propsCrossOut);
-  useEffect(() => {
-    console.log("Props cross out has changed at todo id: " + props.todoId);
-    setCrossOut(propsCrossOut);
-  }, [propsCrossOut]);
+  const [crossOut, setCrossOut] = useState(props.crossOut);
   const setCrossedOut = (e) => {
     fetch(props.backendUrl + props.todoId + "/" + props.entryId, {method:"POST"}).then(res => res.json()).then(data => {
       //updateTodos(props.todoList, props.setTodoList);
-      setCrossOut("line-through");
+      let tempTodoList = props.todoList;
+      console.log("Props index: " + props.indexInList)
+      console.log("Todo List at todo id: " + tempTodoList[props.indexInList]);
+      tempTodoList[props.indexInList].entries[props.entryId].crossedOut = "line-through";
+      changeTodoList(props.todoList, tempTodoList, props.setTodoList);
+      //setCrossOut("line-through");
       //console.log("Todo list at todoId, entryId: " + props.todoList[props.todoId]);
       //(props.todoList, props.setTodoList, props.todoId);
     });
   }
-  return (<div> <p style={{textDecoration:crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
+  return (<div> <p style={{textDecoration:props.crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
 }
 
 
@@ -103,7 +110,7 @@ function App() {
         <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList}/> )} </div>)}
+          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList} indexInList={todos.index}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
