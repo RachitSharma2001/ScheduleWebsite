@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import Popup from './Popup.js';
 import Button from './Button.js';
 import EntryForm from './EntryForm.js';
@@ -14,7 +13,6 @@ function updateTodos(todoList, setTodoList){
   console.log("Going to make fetch to update todos");
   fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
       let tempTodoList = [];
-      let tempDateList = [];
       let numItemsAdded = 0;
       for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
@@ -51,8 +49,8 @@ function TodoEntry(props){
 
 
 function App() {
-  const [addTodo, setAddTodo] = useState(false);
-  const [addEntry, setAddEntry] = useState(false);
+  // Boolean indicating if popup should show
+  const [addTodo, setAddTodo] = useState(false); 
   // List of entries of the todo in the current popup windowd
   const [entryList, setEntryList] = useState([]);
   // List of entries for each todo
