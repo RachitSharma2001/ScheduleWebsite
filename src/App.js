@@ -29,31 +29,20 @@ function updateTodos(todoList, setTodoList){
         tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i], index: numItemsAdded});
         numItemsAdded++;
       }
-
       
-      console.log("Temp todo list at 0: " + tempTodoList[0]);
-      console.log("Temp todo list entry cross out at 0, 0: " + tempTodoList[0].entries[0].crossedOut)
       setTodoList(todoList => tempTodoList);
   });
 }
 
-function changeTodoList(oldTodoList, newTodoList, setTodoList){
-  setTodoList(oldTodoList => newTodoList);
+function updateTodoList(updatedList, setTodoList){
+  setTodoList([...updatedList]);
 }
 
 function TodoEntry(props){
-  const [crossOut, setCrossOut] = useState(props.crossOut);
   const setCrossedOut = (e) => {
     fetch(props.backendUrl + props.todoId + "/" + props.entryId, {method:"POST"}).then(res => res.json()).then(data => {
-      //updateTodos(props.todoList, props.setTodoList);
-      let tempTodoList = props.todoList;
-      console.log("Props index: " + props.indexInList)
-      console.log("Todo List at todo id: " + tempTodoList[props.indexInList]);
-      tempTodoList[props.indexInList].entries[props.entryId].crossedOut = "line-through";
-      changeTodoList(props.todoList, tempTodoList, props.setTodoList);
-      //setCrossOut("line-through");
-      //console.log("Todo list at todoId, entryId: " + props.todoList[props.todoId]);
-      //(props.todoList, props.setTodoList, props.todoId);
+      props.todoList[props.indexInList].entries[props.entryId].crossedOut = "line-through";
+      updateTodoList(props.todoList, props.setTodoList);
     });
   }
   return (<div> <p style={{textDecoration:props.crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
@@ -67,8 +56,6 @@ function App() {
   const [entryList, setEntryList] = useState([]);
   // List of entries for each todo
   const [todoList, setTodoList] = useState([]);
-  // List of dates corresponding to each todo
-  //const [dateList, setDateList] = useState([]);
   // Current todo id (needed as a parameter to entryform)
   const [currTodoId, setTodoId] = useState("-1");
   
