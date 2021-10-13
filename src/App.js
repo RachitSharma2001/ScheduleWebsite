@@ -39,13 +39,14 @@ function updateTodoList(updatedList, setTodoList){
 }
 
 function TodoEntry(props){
+  const { text, todoId, entryId, crossOut, backendUrl, todoList, setTodoList, indexInList } = props;
   const setCrossedOut = (e) => {
-    fetch(props.backendUrl + props.todoId + "/" + props.entryId, {method:"POST"}).then(res => res.json()).then(data => {
-      props.todoList[props.indexInList].entries[props.entryId].crossedOut = "line-through";
-      updateTodoList(props.todoList, props.setTodoList);
+    fetch(backendUrl + todoId + "/" + entryId, {method:"POST"}).then(res => res.json()).then(data => {
+      todoList[indexInList].entries[entryId].crossedOut = "line-through";
+      updateTodoList(todoList, setTodoList);
     });
   }
-  return (<div> <p style={{textDecoration:props.crossOut}}> {props.text} </p> <button onClick={setCrossedOut}>X</button></div>)
+  return (<div> <p style={{textDecoration:crossOut}}> {text} </p> <button onClick={setCrossedOut}>X</button></div>)
 }
 
 
@@ -97,7 +98,9 @@ function App() {
         <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList} indexInList={todos.index}/> )} </div>)}
+          {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
+          backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList} 
+          indexInList={todos.index}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
