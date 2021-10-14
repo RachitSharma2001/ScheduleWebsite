@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Popup from './Popup.js';
 import Button from './Button.js';
 import EntryForm from './EntryForm.js';
-//import TodoEntry from './TodoEntry.js';
 import './App.css';
 import './Popup.css';
 import './TodoBox.css';
+import './TodoEntry.css';
 
 function updateTodos(todoList, setTodoList){
   // Get all the todos with greater than 0 entries
@@ -44,7 +44,7 @@ function TodoEntry(props){
       updateTodoList(todoList, setTodoList);
     });
   }
-  return (<div> <p style={{textDecoration:crossOut}}> {text} </p> <button onClick={setCrossedOut}>X</button></div>)
+  return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
 }
 
 
