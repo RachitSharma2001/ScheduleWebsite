@@ -7,11 +7,11 @@ import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
 
-function updateTodos(todoList, setTodoList){
+function updateTodos(todoList, setTodoList, getTodoUrl){
   // Get all the todos with greater than 0 entries
   // And update the todo and date list with them
   console.log("Going to make fetch to update todos");
-  fetch("http://localhost:5000/getTodos").then(res => res.json()).then(data => {
+  fetch(getTodoUrl).then(res => res.json()).then(data => {
       let tempTodoList = [];
       let numItemsAdded = 0;
       for(let i = data.todoList.length-1; i >= 0; i--){
@@ -57,16 +57,22 @@ function App() {
   const [todoList, setTodoList] = useState([]);
   // Current todo id (needed as a parameter to entryform)
   const [currTodoId, setTodoId] = useState("-1");
+  //let baseApi = "http://localhost:5000";
+  //let baseApi = "https://personal-daily-todolist.herokuapp.com";
+  let addEntryUrl = baseApi + "/addEntry/";
+  let addTodoUrl = baseApi + "/addTodo";
+  let crossEntryUrl = baseApi + "/crossOutEntry/";
+  let getTodoUrl = baseApi + "/getTodos"
   
   // Display the current todos right when user loads window
   useEffect(() => {
-    updateTodos(todoList, setTodoList);
+    updateTodos(todoList, setTodoList, getTodoUrl);
   }, []);
 
   const popupClosed = () => {
     // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
     if(!addTodo){
-      fetch("http://localhost:5000/addTodo", {method: "POST"}).then(res => res.json()).then(data => {
+      fetch(addTodoUrl, {method: "POST"}).then(res => res.json()).then(data => {
         // update current todo id
         setTodoId(data.todoId.toString());
         // Wait for the todo id to be created before adding the todo
@@ -87,7 +93,7 @@ function App() {
     // Close popup
     popupClosed();
     // Call function to update the todos
-    updateTodos(todoList, setTodoList);
+    updateTodos(todoList, setTodoList, getTodoUrl);
   };
   
   return (
@@ -97,11 +103,11 @@ function App() {
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
           {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
-          backendUrl="http://127.0.0.1:5000/crossOutEntry/" todoList={todoList} setTodoList={setTodoList} 
+          backendUrl={crossEntryUrl} todoList={todoList} setTodoList={setTodoList} 
           indexInList={todos.index}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
-          <EntryForm url="http://localhost:5000/addEntry/" todoId={currTodoId} submitCallBack={updateEntryList}/>
+          <EntryForm url={addEntryUrl} todoId={currTodoId} submitCallBack={updateEntryList}/>
           <Button id="finishedAdding" buttonLabel="Done" height="200px" width="200px" onClick={todoAdded}/>
         </>} handleClose={popupClosed}></Popup>}
       </header>
