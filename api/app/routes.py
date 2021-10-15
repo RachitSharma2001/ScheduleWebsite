@@ -27,8 +27,8 @@ def _corsify_actual_response(response):
     return response
 
 ''' Code to run stuff on the database ''' 
-@app.route('/getEntries')
-@app.route('/getEntries/<todoId>', methods=["GET", "OPTIONS"])
+@app.route('/api/getEntries')
+@app.route('/api/getEntries/<todoId>', methods=["GET", "OPTIONS"])
 def getEntry(todoId=None):
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
@@ -38,8 +38,8 @@ def getEntry(todoId=None):
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
-@app.route('/addEntry')
-@app.route('/addEntry/<entryTitle>/<todoId>', methods=["GET", "POST", "OPTIONS"])
+@app.route('/api/addEntry')
+@app.route('/api/addEntry/<entryTitle>/<todoId>', methods=["GET", "POST", "OPTIONS"])
 def addEntry(entryTitle=None, todoId=None):
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
@@ -53,7 +53,7 @@ def addEntry(entryTitle=None, todoId=None):
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
 # Cross out an entry associated with a given todo
-@app.route('/crossOutEntry/<todoId>/<entryId>', methods=["GET", "POST", "OPTIONS"])
+@app.route('/api/crossOutEntry/<todoId>/<entryId>', methods=["GET", "POST", "OPTIONS"])
 def crossOutEntry(todoId, entryId):
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
@@ -65,7 +65,7 @@ def crossOutEntry(todoId, entryId):
     else:
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
-@app.route('/addTodo', methods=["POST", "OPTIONS"])
+@app.route('/api/addTodo', methods=["POST", "OPTIONS"])
 def addTodo():
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
@@ -81,7 +81,7 @@ def addTodo():
         raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
 
 # Backend function to return list of entries of all the todos
-@app.route('/getTodos', methods=["GET", "OPTIONS"])
+@app.route('/api/getTodos', methods=["GET", "OPTIONS"])
 def getTodos():
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()

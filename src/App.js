@@ -57,8 +57,8 @@ function App() {
   const [todoList, setTodoList] = useState([]);
   // Current todo id (needed as a parameter to entryform)
   const [currTodoId, setTodoId] = useState("-1");
-  //let baseApi = "http://localhost:5000";
-  let baseApi = "https://personal-daily-todolist.herokuapp.com";
+  let baseApi = "http://localhost:5000/api";
+  //let baseApi = "https://personal-daily-todolist.herokuapp.com";
   let addEntryUrl = baseApi + "/addEntry/";
   let addTodoUrl = baseApi + "/addTodo";
   let crossEntryUrl = baseApi + "/crossOutEntry/";
