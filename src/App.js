@@ -7,15 +7,16 @@ import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
 
+// Function to update todolist
 function updateTodos(todoList, setTodoList, todoUrl){
-  // Get all the todos with greater than 0 entries
-  // And update the todo and date list with them
-  console.log("Going to make fetch to update todos using url: " + todoUrl);
+  // Get all the todos and important information related to them
   fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
       let tempTodoList = [];
       let numItemsAdded = 0;
+      // Go through each todo from most recent to oldest
       for(let i = data.todoList.length-1; i >= 0; i--){
         let todoEntries = [];
+        // Go through each entry and add it to this todo's entry
         for(let j = 0; j < data.todoList[i].length; j++){
           let crossedOut = "";
           if(data.todoList[i][j][1] == "True"){
@@ -23,7 +24,9 @@ function updateTodos(todoList, setTodoList, todoUrl){
           }
           todoEntries.push({id: j, text: data.todoList[i][j][0], crossedOut: crossedOut});
         }
+        // If the todo has no entry, no reason to add it
         if(todoEntries.length == 0) continue;
+        // Add todo to the overall list and update the amount of items added
         tempTodoList.push({id: data.idList[i], entries: todoEntries, date: data.dateList[i], index: numItemsAdded});
         numItemsAdded++;
       }
@@ -32,18 +35,24 @@ function updateTodos(todoList, setTodoList, todoUrl){
   });
 }
 
+// Function to update the todo list in a way that allows
+// react to notice and rerender
 function updateTodoList(updatedList, setTodoList){
   setTodoList([...updatedList]);
 }
 
+// Functional component defining particular entry of a Todolist
 function TodoEntry(props){
   const { text, todoId, entryId, crossOut, backendUrl, todoList, setTodoList, indexInList } = props;
+  // If entry was crossed out, make appropriate request to backend
   const setCrossedOut = (e) => {
     fetch(backendUrl + todoId + "/" + entryId, {method:"PUT"}).then(res => res.json()).then(data => {
+      // Update todo list
       todoList[indexInList].entries[entryId].crossedOut = "line-through";
       updateTodoList(todoList, setTodoList);
     });
   }
+  // Render UI on screen
   return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
 }
 
@@ -59,10 +68,6 @@ function App() {
   const [currTodoId, setTodoId] = useState("-1");
   let baseApi = "http://localhost:5000/api";
   //let baseApi = "https://personal-daily-todolist.herokuapp.com/api";
-  /*let addEntryUrl = baseApi + "/addEntry/";
-  let addTodoUrl = baseApi + "/addTodo";
-  let crossEntryUrl = baseApi + "/crossOutEntry/";
-  let getTodoUrl = baseApi + "/getTodos"*/
   let todoUrl = baseApi + "/todo";
   let entryUrl = baseApi + "/entry/"
   
@@ -81,13 +86,14 @@ function App() {
         setAddTodo(!addTodo);
       });
     }else{
+      // Close the popup and empty the list of entries in it
       setAddTodo(!addTodo);
       setEntryList([]);
     }
   };
 
-  const updateEntryList = (entryText) => {
-    console.log("Updating!");
+
+  const updatePopupEntryList = (entryText) => {
     setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
   }
 
@@ -109,7 +115,7 @@ function App() {
           indexInList={todos.index}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
-          <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updateEntryList}/>
+          <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
           <Button id="finishedAdding" buttonLabel="Done" height="200px" width="200px" onClick={todoAdded}/>
         </>} handleClose={popupClosed}></Popup>}
       </header>
