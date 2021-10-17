@@ -7,11 +7,11 @@ import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
 
-function updateTodos(todoList, setTodoList, getTodoUrl){
+function updateTodos(todoList, setTodoList, todoUrl){
   // Get all the todos with greater than 0 entries
   // And update the todo and date list with them
-  console.log("Going to make fetch to update todos");
-  fetch(getTodoUrl).then(res => res.json()).then(data => {
+  console.log("Going to make fetch to update todos using url: " + todoUrl);
+  fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
       let tempTodoList = [];
       let numItemsAdded = 0;
       for(let i = data.todoList.length-1; i >= 0; i--){
@@ -39,7 +39,7 @@ function updateTodoList(updatedList, setTodoList){
 function TodoEntry(props){
   const { text, todoId, entryId, crossOut, backendUrl, todoList, setTodoList, indexInList } = props;
   const setCrossedOut = (e) => {
-    fetch(backendUrl + todoId + "/" + entryId, {method:"POST"}).then(res => res.json()).then(data => {
+    fetch(backendUrl + todoId + "/" + entryId, {method:"PUT"}).then(res => res.json()).then(data => {
       todoList[indexInList].entries[entryId].crossedOut = "line-through";
       updateTodoList(todoList, setTodoList);
     });
@@ -58,21 +58,23 @@ function App() {
   // Current todo id (needed as a parameter to entryform)
   const [currTodoId, setTodoId] = useState("-1");
   let baseApi = "http://localhost:5000/api";
-  //let baseApi = "https://personal-daily-todolist.herokuapp.com";
-  let addEntryUrl = baseApi + "/addEntry/";
+  //let baseApi = "https://personal-daily-todolist.herokuapp.com/api";
+  /*let addEntryUrl = baseApi + "/addEntry/";
   let addTodoUrl = baseApi + "/addTodo";
   let crossEntryUrl = baseApi + "/crossOutEntry/";
-  let getTodoUrl = baseApi + "/getTodos"
+  let getTodoUrl = baseApi + "/getTodos"*/
+  let todoUrl = baseApi + "/todo";
+  let entryUrl = baseApi + "/entry/"
   
   // Display the current todos right when user loads window
   useEffect(() => {
-    updateTodos(todoList, setTodoList, getTodoUrl);
+    updateTodos(todoList, setTodoList, todoUrl);
   }, []);
 
   const popupClosed = () => {
     // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
     if(!addTodo){
-      fetch(addTodoUrl, {method: "POST"}).then(res => res.json()).then(data => {
+      fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
         // update current todo id
         setTodoId(data.todoId.toString());
         // Wait for the todo id to be created before adding the todo
@@ -93,7 +95,7 @@ function App() {
     // Close popup
     popupClosed();
     // Call function to update the todos
-    updateTodos(todoList, setTodoList, getTodoUrl);
+    updateTodos(todoList, setTodoList, todoUrl);
   };
   
   return (
@@ -103,11 +105,11 @@ function App() {
         
         {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
           {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
-          backendUrl={crossEntryUrl} todoList={todoList} setTodoList={setTodoList} 
+          backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
           indexInList={todos.index}/> )} </div>)}
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
-          <EntryForm url={addEntryUrl} todoId={currTodoId} submitCallBack={updateEntryList}/>
+          <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updateEntryList}/>
           <Button id="finishedAdding" buttonLabel="Done" height="200px" width="200px" onClick={todoAdded}/>
         </>} handleClose={popupClosed}></Popup>}
       </header>

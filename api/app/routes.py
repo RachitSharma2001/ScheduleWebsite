@@ -26,66 +26,38 @@ def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-''' Code to run stuff on the database ''' 
-@app.route('/api/getEntries')
-@app.route('/api/getEntries/<todoId>', methods=["GET", "OPTIONS"])
-def getEntry(todoId=None):
-    if request.method == "OPTIONS": # CORS preflight
+# Handle requests based on entries
+@app.route('/api/entry/<entryTitle>/<todoId>', methods=["POST", "OPTIONS"])
+@app.route('/api/entry/<todoId>/<entryId>', methods=["PUT", "OPTIONS"])
+def entry(entryTitle=None, todoId=None, entryId=None):
+    if request.method == "OPTIONS":
         return _build_cors_preflight_response()
-    elif request.method == "GET":
-        todo = Todo.query.get(todoId)
-        return _corsify_actual_response(createJsonObject("EntryList", todo.getEntries()))
-    else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
-
-@app.route('/api/addEntry')
-@app.route('/api/addEntry/<entryTitle>/<todoId>', methods=["GET", "POST", "OPTIONS"])
-def addEntry(entryTitle=None, todoId=None):
-    if request.method == "OPTIONS": # CORS preflight
-        return _build_cors_preflight_response()
-    elif request.method == "POST":  # Actual Cors request from front end
-        # Create an Entry and add it to db
+    # If given a POST request, add the given todo
+    elif request.method == "POST":
+        if entryTitle == None or todoId == None:
+            raise RuntimeError("Given POST method yet didn't give entryTitle or todoId")
         newEntry = Entry(entryContent=entryTitle, referenceTodo=todoId)
         db.session.add(newEntry)
         db.session.commit()
         return _corsify_actual_response(createJsonObject("message", "Success"))
-    else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
-
-# Cross out an entry associated with a given todo
-@app.route('/api/crossOutEntry/<todoId>/<entryId>', methods=["GET", "POST", "OPTIONS"])
-def crossOutEntry(todoId, entryId):
-    if request.method == "OPTIONS": # CORS preflight
-        return _build_cors_preflight_response()
-    elif request.method == "POST" or request.method == "GET":  # Actual Cors request from front end
+    # If given a PUT request, cross out the todo
+    elif request.method == "PUT":
+        if todoId == None or entryId == None:
+            raise RuntimeError("Given PUT method yet didn't give entryId or todoId")
         entry = Todo.query.get(int(todoId)).getEntry(int(entryId))
         entry.setCrossedOut()
         db.session.commit()
         return _corsify_actual_response(createJsonObject("message", "Success"))
     else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+        raise RuntimeError("Don't know how to handle method {}".format(request.method))
 
-@app.route('/api/addTodo', methods=["POST", "OPTIONS"])
-def addTodo():
+@app.route('/api/todo', methods=["POST", "GET", "OPTIONS"])
+# Handles requests based on the todos
+def todo():
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
-    elif request.method == "POST":  #  Cors request from front end
-        todoId = len(Todo.query.all()) + 1
-        date = datetime.now()
-        #print("Adding todo with date: " + date.strftime("%M/%D"))
-        newTodo = Todo(id=todoId, dateOfTodo=date)
-        db.session.add(newTodo)
-        db.session.commit()
-        return _corsify_actual_response(createJsonObject("todoId", todoId))
-    else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
-
-# Backend function to return list of entries of all the todos
-@app.route('/api/getTodos', methods=["GET", "OPTIONS"])
-def getTodos():
-    if request.method == "OPTIONS": # CORS preflight
-        return _build_cors_preflight_response()
-    elif request.method == "GET":   #  Cors request from front end
+    # If a GET request, return list of all todos
+    elif request.method == "GET":
         todoList = Todo.query.all()
         todoEntryList = []
         dateList = []
@@ -96,5 +68,13 @@ def getTodos():
             dateList.append(todo.getDate())
             idList.append(todo.id)
         return _corsify_actual_response(createJsonObject("idList", idList, "todoList", todoEntryList, "dateList", dateList))
+    # If a POST request, create a new todo
+    elif request.method == "POST":
+        todoId = len(Todo.query.all()) + 1
+        date = datetime.now()
+        newTodo = Todo(id=todoId, dateOfTodo=date)
+        db.session.add(newTodo)
+        db.session.commit()
+        return _corsify_actual_response(createJsonObject("todoId", todoId))
     else:
-        raise RuntimeError("Weird - don't know how to handle method {}".format(request.method))
+        raise RuntimeError("Don't know how to handle method {}".format(request.method))
