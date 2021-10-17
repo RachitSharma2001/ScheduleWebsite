@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 import Popup from './Popup.js';
 import EntryForm from './EntryForm.js';
 import './App.css';
@@ -120,6 +120,25 @@ function App() {
       </header>
     </div>
   );
+
+}*/
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navigation from './Navigation.jsx';
+import Home from './Home.jsx';
+
+function App(){
+  return (
+    <div className="App">
+      <Router>
+        <Navigation />
+        <Switch>
+          <Route path='/todolist' exact component={() => <Home />}/>
+        </Switch>
+      </Router>
+    </div>
+  )
 }
 
 export default App;
