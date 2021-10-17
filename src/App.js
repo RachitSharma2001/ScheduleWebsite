@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup.js';
-import Button from './Button.js';
 import EntryForm from './EntryForm.js';
 import './App.css';
 import './Popup.css';
@@ -116,7 +115,7 @@ function App() {
         {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
           <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
-          <Button id="finishedAdding" buttonLabel="Done" height="200px" width="200px" onClick={todoAdded}/>
+          <button id="finishedAdding" height="200px" width="200px" onClick={todoAdded}> Done </button>
         </>} handleClose={popupClosed}></Popup>}
       </header>
     </div>
