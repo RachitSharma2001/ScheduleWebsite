@@ -3,11 +3,29 @@ from datetime import datetime
 
 MAXCHARS = 300
 
+# Stores Users of website
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100))
+    password = db.Column(db.String(100))
+    # One to many relationship between User and Todos
+    todolist = db.relationship('Todo', lazy='dynamic', backref='user')
+
+    def getTodosOfUser(self):
+        userTodolist = []
+        for todo in self.todolist:
+            userTodolist.append(todo)
+        return userTodolist
+
+    def __repr__(self):
+        return 'User {}'.format(self.id)
+
 # Stores a days todo
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dateOfTodo = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     entries = db.relationship('Entry', lazy='dynamic', backref='todo')
+    userOfTodo = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def createEntriesList(self, entries):
         entryList = []

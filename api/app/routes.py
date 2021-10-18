@@ -2,7 +2,7 @@ from flask import jsonify, request, make_response
 import json
 import pprint
 from app import app, db
-from app.models import Todo, Entry
+from app.models import User, Todo, Entry
 from datetime import datetime
 
 ''' Functions to create jsons given parameters '''
@@ -51,14 +51,14 @@ def entry(entryTitle=None, todoId=None, entryId=None):
     else:
         raise RuntimeError("Don't know how to handle method {}".format(request.method))
 
-@app.route('/api/todo', methods=["POST", "GET", "OPTIONS"])
+@app.route('/api/todo/<userId>', methods=["POST", "GET", "OPTIONS"])
 # Handles requests based on the todos
-def todo():
+def todo(userId=None):
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
-    # If a GET request, return list of all todos
+    # If a GET request, return list of all todos associated to user
     elif request.method == "GET":
-        todoList = Todo.query.all()
+        todoList = User.query.get(userId).getTodosOfUser()
         todoEntryList = []
         dateList = []
         idList = []
@@ -72,9 +72,36 @@ def todo():
     elif request.method == "POST":
         todoId = len(Todo.query.all()) + 1
         date = datetime.now()
-        newTodo = Todo(id=todoId, dateOfTodo=date)
+        newTodo = Todo(id=todoId, dateOfTodo=date, userOfTodo=userId)
         db.session.add(newTodo)
         db.session.commit()
         return _corsify_actual_response(createJsonObject("todoId", todoId))
+    else:
+        raise RuntimeError("Don't know how to handle method {}".format(request.method))
+
+def createNewUser(email, password):
+    userId = len(User.query.all()) + 1
+    newUser = User(id=userId, email=email, password=password)
+    db.session.add(newUser)
+    db.session.commit()
+    return userId
+
+@app.route('/api/user/<email>/<password>', methods=["GET", "POST", "OPTIONS"])
+# Handles requests related to users
+def user(email=None, password=None):
+    # CORS preflight
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
+    # If a GET request, return whether the user exists
+    elif request.method == "GET":
+        user = User.query.filter_by(email=email, password=password).first()
+        if user == None:
+            return _corsify_actual_response(createJsonObject("message", "fail"))
+        else:
+            return _corsify_actual_response(createJsonObject("message", "success", "userId", user.id))
+    # If a POST request, create a new user with given credentials
+    elif request.method == "POST":
+        newUserId = createNewUser(email, password)
+        return _corsify_actual_response(createJsonObject("message", "Success"))
     else:
         raise RuntimeError("Don't know how to handle method {}".format(request.method))

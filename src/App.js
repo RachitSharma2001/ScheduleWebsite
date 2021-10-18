@@ -131,14 +131,15 @@ import SignUp from './CreateAccount.jsx';
 import LogIn from './LogIn.jsx';
 
 function App(){
+  let websiteUrl = "http://localhost:5000/api";
   return (
     <div className="App">
       <Router>
         <Navigation />
         <Switch>
           <Route path='/todolist' exact component={() => <Home />}/>
-          <Route path='/signup' exact component={() => <SignUp />}/>
-          <Route path='/login' exact component={() => <LogIn />}/>
+          <Route path='/signup' exact component={() => <SignUp url={websiteUrl}/>}/>
+          <Route path='/login' exact component={() => <LogIn url={websiteUrl}/>}/>
         </Switch>
       </Router>
     </div>
