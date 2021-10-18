@@ -127,7 +127,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation.jsx';
 import Home from './Home.jsx';
-import SignUp from './SignUp.jsx';
+import SignUp from './CreateAccount.jsx';
+import LogIn from './LogIn.jsx';
 
 function App(){
   return (
@@ -137,6 +138,7 @@ function App(){
         <Switch>
           <Route path='/todolist' exact component={() => <Home />}/>
           <Route path='/signup' exact component={() => <SignUp />}/>
+          <Route path='/login' exact component={() => <LogIn />}/>
         </Switch>
       </Router>
     </div>

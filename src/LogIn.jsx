@@ -1,8 +1,9 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function SignUp() {
+function LogIn() {
     return (
         <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -17,11 +18,10 @@ function SignUp() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
-            </Form.Group>
+
+            <Button> Create Account </Button>
         </Form>
     );
 }
 
-export default SignUp;
+export default LogIn;

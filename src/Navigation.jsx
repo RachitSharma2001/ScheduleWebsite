@@ -6,7 +6,7 @@ function Navigation(props) {
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
-          <Link class="navbar-brand" to="/">
+          <Link class="navbar-brand" to="/login">
             Personal TodoList
           </Link>
 
@@ -14,12 +14,11 @@ function Navigation(props) {
             <ul class="navbar-nav ml-auto">
               <li
                 class={`nav-item  ${
-                  props.location.pathname === "/" ? "active" : ""
+                  props.location.pathname === "/login" ? "active" : ""
                 }`}
               >
-                <Link class="nav-link" to="/">
+                <Link class="nav-link" to="/login">
                   Log In
-                  <span class="sr-only">(current)</span>
                 </Link>
               </li>
               <li
@@ -28,7 +27,7 @@ function Navigation(props) {
                 }`}
               >
                 <Link class="nav-link" to="/signup">
-                  Sign Up
+                  Create Account
                 </Link>
               </li>
               <li
