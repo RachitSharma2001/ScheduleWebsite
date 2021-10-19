@@ -7,22 +7,26 @@ function LogIn(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // Function called when user changes content of email field
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
-        console.log("Email: " + email);
     }
 
+    // Function called when user changes content of password field
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
-        console.log("Password: " + password);
     }
 
+    // Function called when user clicks sign in button
     const authenticateUser = () => {
+        // Call backend to verify if user exists
         fetch(props.backEndUrl + "/user/" + email + "/" + password).then(res => res.json()).then(data => {
+            // Check if user exists
             if(data.message == "fail"){
+                // Entered email or password is incorrect
                 console.log("Wrong Email or Password");
             }else{
-                console.log("Returned user id: " + data.userId);
+                // Call parent function, which will redirect client
                 props.authUser(data.userId);
             }
         });
@@ -44,7 +48,7 @@ function LogIn(props) {
                 <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} />
             </Form.Group>
 
-            <Button onClick={authenticateUser}> Create Account </Button>
+            <Button onClick={authenticateUser}> Sign In </Button>
         </Form>
         </header>
         

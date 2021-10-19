@@ -134,24 +134,24 @@ function App(){
   const [loggedIn, setLoggedIn] = useState(false);
   const [currUserId, setCurrUserId] = useState("");
   let backEndUrl = "http://localhost:5000/api";
+
+  // Procedure used to set up signing in of user
   const authUser = (userId) => {
-    console.log("Authenticating user with user id: " + userId);
-    console.log("Type of user id: " + (typeof userId));
+    // Change the current user id, which will be passed in to new route
     setCurrUserId(userId.toString());
+    // Change logged in hook, allowing for app to know to redirect
     setLoggedIn(true);
-    console.log("currUserId: " + currUserId);
   }
+
   return (
     <div className="App">
       <Router>
         <Navigation />
         <Switch>
           {loggedIn && <Redirect to={"/todolist/" + currUserId}/>}
-
           <Route exact path='/todolist/:userId' exact component={() => <Home backEndUrl={backEndUrl}/>}/> 
           <Route exact path='/login' exact component={() => <LogIn authUser={authUser} backEndUrl={backEndUrl}/>}/>
           <Route exact path='/signup' exact component={() => <SignUp url={backEndUrl}/>}/>
-          
         </Switch>
       </Router>
     </div>
