@@ -5,10 +5,12 @@ import './App.css';
 import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
+import { useParams } from 'react-router-dom';
 
 
 // Function to update todolist
 function updateTodos(todoList, setTodoList, todoUrl){
+    console.log("The todo url: " + todoUrl);
     // Get all the todos and important information related to them
     fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
         let tempTodoList = [];
@@ -56,7 +58,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
   }
 
-    function Home(){
+    function Home(props){
         // Boolean indicating if popup should show
         const [addTodo, setAddTodo] = useState(false); 
         // List of entries of the todo in the current popup windowd
@@ -65,9 +67,9 @@ function updateTodos(todoList, setTodoList, todoUrl){
         const [todoList, setTodoList] = useState([]);
         // Current todo id (needed as a parameter to entryform)
         const [currTodoId, setTodoId] = useState("-1");
-        let baseApi = "http://localhost:5000/api";
-        //let baseApi = "https://personal-daily-todolist.herokuapp.com/api";
-        let todoUrl = baseApi + "/todo";
+        let baseApi = props.backEndUrl;
+        const { userId } = useParams();
+        let todoUrl = baseApi + "/todo/" + userId;
         let entryUrl = baseApi + "/entry/"
         
         // Display the current todos right when user loads window

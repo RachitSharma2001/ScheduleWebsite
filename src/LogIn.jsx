@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function LogIn(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const givenUrl = props.url;
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -19,16 +18,18 @@ function LogIn(props) {
     }
 
     const authenticateUser = () => {
-        fetch(givenUrl + "/user/" + email + "/" + password).then(res => res.json()).then(data => {
+        fetch(props.backEndUrl + "/user/" + email + "/" + password).then(res => res.json()).then(data => {
             if(data.message == "fail"){
                 console.log("Wrong Email or Password");
             }else{
-                console.log("User id: " + data.userId);
+                console.log("Returned user id: " + data.userId);
+                props.authUser(data.userId);
             }
         });
     }
 
     return (
+        <header className="logInHeader">
         <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
@@ -45,6 +46,8 @@ function LogIn(props) {
 
             <Button onClick={authenticateUser}> Create Account </Button>
         </Form>
+        </header>
+        
     );
 }
 

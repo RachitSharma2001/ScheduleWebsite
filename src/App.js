@@ -123,23 +123,35 @@ function App() {
 
 }*/
 
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { React, useState } from 'react';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation.jsx';
 import Home from './Home.jsx';
 import SignUp from './CreateAccount.jsx';
 import LogIn from './LogIn.jsx';
 
 function App(){
-  let websiteUrl = "http://localhost:5000/api";
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currUserId, setCurrUserId] = useState("");
+  let backEndUrl = "http://localhost:5000/api";
+  const authUser = (userId) => {
+    console.log("Authenticating user with user id: " + userId);
+    console.log("Type of user id: " + (typeof userId));
+    setCurrUserId(userId.toString());
+    setLoggedIn(true);
+    console.log("currUserId: " + currUserId);
+  }
   return (
     <div className="App">
       <Router>
         <Navigation />
         <Switch>
-          <Route path='/todolist' exact component={() => <Home />}/>
-          <Route path='/signup' exact component={() => <SignUp url={websiteUrl}/>}/>
-          <Route path='/login' exact component={() => <LogIn url={websiteUrl}/>}/>
+          {loggedIn && <Redirect to={"/todolist/" + currUserId}/>}
+
+          <Route exact path='/todolist/:userId' exact component={() => <Home backEndUrl={backEndUrl}/>}/> 
+          <Route exact path='/login' exact component={() => <LogIn authUser={authUser} backEndUrl={backEndUrl}/>}/>
+          <Route exact path='/signup' exact component={() => <SignUp url={backEndUrl}/>}/>
+          
         </Switch>
       </Router>
     </div>
