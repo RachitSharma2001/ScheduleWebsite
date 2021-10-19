@@ -68,7 +68,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
         // Current todo id (needed as a parameter to entryform)
         const [currTodoId, setTodoId] = useState("-1");
         let baseApi = props.backEndUrl;
-        const { userId } = useParams();
+        const userId = props.userId;
         let todoUrl = baseApi + "/todo/" + userId;
         let entryUrl = baseApi + "/entry/"
         
