@@ -28,7 +28,7 @@ class EntryForm extends React.Component {
     render() {
         return (<form onSubmit={this.handleSubmit}>
             <input type="Text" onChange={this.handleTitleChange} id="EntrySubmit"/>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="+" style={{marginLeft: "30px"}} />
         </form>);
     };
 }

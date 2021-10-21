@@ -106,7 +106,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
         return (
             <div className="App">
             <header className="App-header">
-                <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo </button>
+                <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={popupClosed}> Add Todo </button>
                 
                 {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
                 {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
@@ -115,7 +115,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
                 {addTodo && <Popup content={<>
                 <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
                 <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
-                <button id="finishedAdding" height="200px" width="200px" onClick={todoAdded}> Done </button>
+                <button id="finishedAdding" style={{height: "60px", width: "100px", marginTop: "20px"}} onClick={todoAdded}> Done </button>
                 </>} handleClose={popupClosed}></Popup>}
             </header>
             </div>
