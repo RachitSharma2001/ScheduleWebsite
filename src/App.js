@@ -6,12 +6,6 @@ import Home from './Home.jsx';
 import SignUp from './CreateAccount.jsx';
 import LogIn from './LogIn.jsx';
 
-
-
-const clearToken = () => {
-  console.log("Clear token called");
-}
-
 function App(){
   // Get the token that is stored in browser history
   const getToken = () => {
@@ -33,6 +27,11 @@ function App(){
     setToken(userToken);
   };
 
+  const clearToken = () => {
+    localStorage.clear();
+    setToken(getToken());
+  }
+
   // If the token does not exist, prompt the user to sign in
   if(!token){
     return (<div className="PublicView"> 
@@ -53,9 +52,9 @@ function App(){
           <Route path="/todolist">
             <Home backEndUrl={backEndUrl} userId={token}/>
           </Route>
-          <Route path="/signout">
-            <p> Successfully logged out </p>
-          </Route>
+          <Route path="/signout" render={() => (
+            clearToken()
+          )}/>
         </Switch>
       </Router>
     </div>
