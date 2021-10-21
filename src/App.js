@@ -31,7 +31,7 @@ function App(){
     return (<div className="PublicView"> 
       <Router> 
         <PublicNav/> 
-        <Route path="/todolist"> <LogIn backEndUrl={backEndUrl} saveTokenFunc={saveToken} arg={setToken}/> </Route>
+        <Route path="/todolist"> <LogIn backEndUrl={backEndUrl} saveTokenFunc={saveToken} tokenHook={setToken}/> </Route>
         <Route path="/signup"> <SignUp url={backEndUrl}/> </Route>
       </Router>
     </div>);

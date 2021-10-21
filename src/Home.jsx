@@ -80,16 +80,16 @@ function updateTodos(todoList, setTodoList, todoUrl){
         const popupClosed = () => {
             // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
             if(!addTodo){
-            fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
-                // update current todo id
-                setTodoId(data.todoId.toString());
-                // Wait for the todo id to be created before adding the todo
-                setAddTodo(!addTodo);
-            });
+              fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
+                  // update current todo id
+                  setTodoId(data.todoId.toString());
+                  // Wait for the todo id to be created before adding the todo
+                  setAddTodo(!addTodo);
+              });
             }else{
-            // Close the popup and empty the list of entries in it
-            setAddTodo(!addTodo);
-            setEntryList([]);
+              // Close the popup and empty the list of entries in it
+              setAddTodo(!addTodo);
+              setEntryList([]);
             }
         };
 
