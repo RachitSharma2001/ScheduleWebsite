@@ -1,42 +1,30 @@
+// Class holding the navigation bar that a potential user sees if they are not signed in
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 
-function Navigation(props) {
+function PublicNav(props) {
   return (
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
-          <Link class="navbar-brand" to="/login">
-            Personal TodoList
-          </Link>
-
           <div>
             <ul class="navbar-nav ml-auto">
               <li
                 class={`nav-item  ${
-                  props.location.pathname === "/login" ? "active" : ""
+                  props.location.pathname === "/todolist" ? "active" : ""
                 }`}
               >
-                <Link class="nav-link" to="/login">
+                <Link class="nav-link" to="/todolist">
                   Log In
                 </Link>
               </li>
               <li
                 class={`nav-item  ${
-                  props.location.pathname === "/about" ? "active" : ""
+                  props.location.pathname === "/signup" ? "active" : ""
                 }`}
               >
                 <Link class="nav-link" to="/signup">
                   Create Account
-                </Link>
-              </li>
-              <li
-                class={`nav-item  ${
-                  props.location.pathname === "/contact" ? "active" : ""
-                }`}
-              >
-                <Link class="nav-link" to="/todolist">
-                  Personal TodoList
                 </Link>
               </li>
             </ul>
@@ -47,4 +35,4 @@ function Navigation(props) {
   );
 }
 
-export default withRouter(Navigation);
+export default withRouter(PublicNav);

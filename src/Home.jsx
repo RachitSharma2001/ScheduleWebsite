@@ -5,7 +5,7 @@ import './App.css';
 import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
-import { useParams } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 
 
 // Function to update todolist
@@ -58,7 +58,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
   }
 
-    function Home(props){
+    export default function Home(props){
         // Boolean indicating if popup should show
         const [addTodo, setAddTodo] = useState(false); 
         // List of entries of the todo in the current popup windowd
@@ -124,4 +124,3 @@ function updateTodos(todoList, setTodoList, todoUrl){
         );
     }
 
-export default Home;
