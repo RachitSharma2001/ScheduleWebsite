@@ -7,11 +7,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function SignUp(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [signupSuccess, setUserSignedUp] = useState(false);
     const givenUrl = props.url;
     const createUser = () => {
         let createUserUrl = givenUrl + "/user/" + email + "/" + password;
         fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
-            console.log("Returned Message: " + data.message);
+            setUserSignedUp(true);
         });
     };
 
@@ -45,8 +46,13 @@ function SignUp(props) {
             </div>
 
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+            {signupSuccess && <p> You have successfully signed up! Now go and log in. </p>}
+            </div>
+            
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
             <Button onClick={createUser} style={{marginTop:"30px", marginLeft: "100px", marginRight: "10px"}}> Create Account </Button>
             </div>
+            
         </Form>
     );
 }
