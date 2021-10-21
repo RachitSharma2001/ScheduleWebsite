@@ -28,7 +28,7 @@ export default function LogIn(props) {
                 console.log("Wrong Email or Password");
             }else{
                 // Call parent function, which will redirect client
-                props.setToken(data.userId);
+                props.saveTokenFunc(data.userId, props.arg);
             }
         });
     }
