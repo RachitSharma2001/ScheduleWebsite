@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function LogIn(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [wrongInfo, setWrongInfo] = useState(false);
 
     // Function called when user changes content of email field
     const handleEmailChange = (event) => {
@@ -25,9 +26,11 @@ export default function LogIn(props) {
             if(data.message == "fail"){
                 // Entered email or password is incorrect
                 console.log("Wrong Email or Password");
+                setWrongInfo(true);
             }else{
                 // Call parent function, which will redirect client
                 props.saveTokenFunc(data.userId);
+                setWrongInfo(false);
             }
         });
     }
@@ -50,6 +53,10 @@ export default function LogIn(props) {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} />
             </Form.Group>
+            </div>
+
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+                {wrongInfo && <p> Email or password is incorrect. </p>}
             </div>
 
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
