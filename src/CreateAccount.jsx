@@ -5,25 +5,30 @@ import {withRouter} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function SignUp(props) {
+    // React hook variables
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [signupSuccess, setUserSignedUp] = useState(false);
+    // Given Server Side Url
     const givenUrl = props.url;
+
+    // Function called when user created
     const createUser = () => {
         let createUserUrl = givenUrl + "/user/" + email + "/" + password;
         fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
+            // If sign up successful, tell user
             setUserSignedUp(true);
         });
     };
 
+    // Function called when user types changes into email field
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
-        console.log("Email: " + email);
     }
 
+    // Function called when user types changes into password field
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
-        console.log("Password: " + password);
     }
 
     return (
