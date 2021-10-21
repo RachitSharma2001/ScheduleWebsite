@@ -5,8 +5,6 @@ import './App.css';
 import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
-import { useParams, withRouter } from 'react-router-dom';
-
 
 // Function to update todolist
 function updateTodos(todoList, setTodoList, todoUrl){
@@ -108,7 +106,7 @@ function updateTodos(todoList, setTodoList, todoUrl){
         return (
             <div className="App">
             <header className="App-header">
-                <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo for a day </button>
+                <button id="TodoAdd" style={{height: "60px", width: "200px"}} onClick={popupClosed}> Add Todo </button>
                 
                 {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
                 {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
