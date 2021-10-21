@@ -1,4 +1,3 @@
-// Class holding the navigation bar that a potential user sees if they are not signed in
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 
@@ -7,6 +6,10 @@ function PublicNav(props) {
     <div className="navigation">
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container">
+          <Link class="navbar-brand" to="/todolist">
+            Personal TodoList
+          </Link>
+
           <div>
             <ul class="navbar-nav ml-auto">
               <li
@@ -34,5 +37,4 @@ function PublicNav(props) {
     </div>
   );
 }
-
 export default withRouter(PublicNav);
