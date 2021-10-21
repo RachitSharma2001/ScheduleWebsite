@@ -1,7 +1,6 @@
 import { React, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {withRouter} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function LogIn(props) {
@@ -28,7 +27,7 @@ export default function LogIn(props) {
                 console.log("Wrong Email or Password");
             }else{
                 // Call parent function, which will redirect client
-                props.saveTokenFunc(data.userId, props.tokenHook);
+                props.saveTokenFunc(data.userId);
             }
         });
     }
