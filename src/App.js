@@ -27,8 +27,11 @@ function App(){
     setToken(userToken);
   };
 
+  // Function called to sign user out
   const clearToken = () => {
+    // Clear local storage
     localStorage.clear();
+    // Reset token -> triggers react to reload, causing sign in page to appear
     setToken(getToken());
   }
 
