@@ -7,14 +7,14 @@ import LogIn from './LogIn.jsx';
 //import useToken from './useToken';
 
 const getToken = () => {
-  const tokenString = sessionStorage.getItem('token');
+  const tokenString = localStorage.getItem('token');
   const userToken = JSON.parse(tokenString);
   return userToken;
 };
 
 const saveToken = (userToken, setToken) => {
   console.log("Set token is called: " + userToken);
-  sessionStorage.setItem('token', JSON.stringify(userToken));
+  localStorage.setItem('token', JSON.stringify(userToken));
   setToken(userToken);
 };
 
