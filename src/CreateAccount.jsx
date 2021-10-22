@@ -13,26 +13,32 @@ function SignUp(props) {
     // Given Server Side Url
     const givenUrl = props.url;
 
+    // Function to check if data returned from server indicates
+    // user exists or not
     const userNotExist = (returnMessage, returnReason) => {
         return returnMessage == "fail" && returnReason == "email";
     }
 
     // Function called when user created
     const createUser = () => {
-
-        // Check if user already exists
+        // Link to backend api
         let createUserUrl = givenUrl + "/user/" + email + "/" + password;
+        // Get information about user from backend
         fetch(createUserUrl, {method:"GET"}).then(res => res.json()).then(data => {
-            console.log("Returned data from fetch: " + data.message + " " + data.reason);
+            // Check if user already exists or not
             if(userNotExist(data.message, data.reason)){
+                // If the user doesn't exist, create user
                 fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
-                    // If sign up successful, tell user
+                    // Tell user sign up successful
                     setUserSignedUp(true);
+                    // Make sure "Email already exists" doesn't show up
                     setSignUpFail(false);
                 });
             }else{
+                // Make sure "Sign up successful" message not shown
+                setUserSignedUp(false);                
+                // Tell user email already exists
                 setSignUpFail(true);
-                setUserSignedUp(false);
             }
         });
     };
