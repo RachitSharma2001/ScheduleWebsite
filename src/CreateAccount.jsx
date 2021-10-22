@@ -9,15 +9,31 @@ function SignUp(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [signupSuccess, setUserSignedUp] = useState(false);
+    const [signUpFail, setSignUpFail] = useState(false);
     // Given Server Side Url
     const givenUrl = props.url;
 
+    const userNotExist = (returnMessage, returnReason) => {
+        return returnMessage == "fail" && returnReason == "email";
+    }
+
     // Function called when user created
     const createUser = () => {
+
+        // Check if user already exists
         let createUserUrl = givenUrl + "/user/" + email + "/" + password;
-        fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
-            // If sign up successful, tell user
-            setUserSignedUp(true);
+        fetch(createUserUrl, {method:"GET"}).then(res => res.json()).then(data => {
+            console.log("Returned data from fetch: " + data.message + " " + data.reason);
+            if(userNotExist(data.message, data.reason)){
+                fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
+                    // If sign up successful, tell user
+                    setUserSignedUp(true);
+                    setSignUpFail(false);
+                });
+            }else{
+                setSignUpFail(true);
+                setUserSignedUp(false);
+            }
         });
     };
 
@@ -52,6 +68,10 @@ function SignUp(props) {
 
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
             {signupSuccess && <p> You have successfully signed up! Now go and log in. </p>}
+            </div>
+
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+            {signUpFail && <p> Email already exists! </p>}
             </div>
             
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>

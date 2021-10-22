@@ -94,11 +94,16 @@ def user(email=None, password=None):
         return _build_cors_preflight_response()
     # If a GET request, return whether the user exists
     elif request.method == "GET":
-        user = User.query.filter_by(email=email, password=password).first()
-        if user == None:
-            return _corsify_actual_response(createJsonObject("message", "fail"))
+        
+        userWithEmail = User.query.filter_by(email=email).first()
+        userWithPass = User.query.filter_by(email=email, password=password).first()
+
+        if userWithEmail == None:
+            return _corsify_actual_response(createJsonObject("message", "fail", "reason", "email"))
+        elif userWithPass == None:
+            return _corsify_actual_response(createJsonObject("message", "fail", "reason", "password"))
         else:
-            return _corsify_actual_response(createJsonObject("message", "success", "userId", user.id))
+            return _corsify_actual_response(createJsonObject("message", "success", "userId", userWithPass.id))
     # If a POST request, create a new user with given credentials
     elif request.method == "POST":
         newUserId = createNewUser(email, password)
