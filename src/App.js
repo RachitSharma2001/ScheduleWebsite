@@ -17,7 +17,7 @@ function App(){
   // Set token saved in browser as react hook
   const [token, setToken] = useState(getToken());
   // Server url
-  let backEndUrl = "http://localhost:5000/api";
+  let backEndUrl = "https://rachitsharma2001.pythonanywhere.com/api";
 
   // Function called when user signs in successfully
   const saveToken = (userToken) => {

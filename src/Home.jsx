@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Popup from './Popup.js';
-import EntryForm from './EntryForm.js';
+import Popup from './Popup.jsx';
+import EntryForm from './EntryForm.jsx';
 import './App.css';
 import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
 
-// Function to update todolist
-function updateTodos(todoList, setTodoList, todoUrl){
+  // Function to update todolist
+  function updateTodos(todoList, setTodoList, todoUrl){
     console.log("The todo url: " + todoUrl);
     // Get all the todos and important information related to them
     fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
@@ -56,69 +56,72 @@ function updateTodos(todoList, setTodoList, todoUrl){
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
   }
 
-    export default function Home(props){
-        // Boolean indicating if popup should show
-        const [addTodo, setAddTodo] = useState(false); 
-        // List of entries of the todo in the current popup windowd
-        const [entryList, setEntryList] = useState([]);
-        // List of entries for each todo
-        const [todoList, setTodoList] = useState([]);
-        // Current todo id (needed as a parameter to entryform)
-        const [currTodoId, setTodoId] = useState("-1");
-        let baseApi = props.backEndUrl;
-        const userId = props.userId;
-        let todoUrl = baseApi + "/todo/" + userId;
-        let entryUrl = baseApi + "/entry/"
-        
-        // Display the current todos right when user loads window
-        useEffect(() => {
-            updateTodos(todoList, setTodoList, todoUrl);
-        }, []);
+  export default function Home(props){
+      // Boolean indicating if popup should show
+      const [addTodo, setAddTodo] = useState(false); 
+      // List of entries of the todo in the current popup windowd
+      const [entryList, setEntryList] = useState([]);
+      // List of entries for each todo
+      const [todoList, setTodoList] = useState([]);
+      // Current todo id (needed as a parameter to entryform)
+      const [currTodoId, setTodoId] = useState("-1");
+      // Variable holding user id
+      const userId = props.userId;
+      // Variable holding url of backend
+      let baseApi = props.backEndUrl;
+      // Variables holding important backend routes
+      let todoUrl = baseApi + "/todo/" + userId;
+      let entryUrl = baseApi + "/entry/"
+      
+      // Display the current todos right when user loads window
+      useEffect(() => {
+          updateTodos(todoList, setTodoList, todoUrl);
+      }, []);
 
-        const popupClosed = () => {
-            // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
-            if(!addTodo){
-              fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
-                  // update current todo id
-                  setTodoId(data.todoId.toString());
-                  // Wait for the todo id to be created before adding the todo
-                  setAddTodo(!addTodo);
-              });
-            }else{
-              // Close the popup and empty the list of entries in it
-              setAddTodo(!addTodo);
-              setEntryList([]);
-            }
-        };
+      const popupClosed = () => {
+          // If the todo button was clicked, create a new todo database object. Else Untoggle the popup
+          if(!addTodo){
+            fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
+                // update current todo id
+                setTodoId(data.todoId.toString());
+                // Wait for the todo id to be created before adding the todo
+                setAddTodo(!addTodo);
+            });
+          }else{
+            // Close the popup and empty the list of entries in it
+            setAddTodo(!addTodo);
+            setEntryList([]);
+          }
+      };
 
 
-        const updatePopupEntryList = (entryText) => {
-            setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
-        }
+      const updatePopupEntryList = (entryText) => {
+          setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
+      }
 
-        const todoAdded = () => {
-            // Close popup
-            popupClosed();
-            // Call function to update the todos
-            updateTodos(todoList, setTodoList, todoUrl);
-        };
+      const todoAdded = () => {
+          // Close popup
+          popupClosed();
+          // Call function to update the todos
+          updateTodos(todoList, setTodoList, todoUrl);
+      };
 
-        return (
-            <div className="App">
-            <header className="App-header">
-                <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={popupClosed}> Add Todo </button>
-                
-                {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-                {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
-                backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
-                indexInList={todos.index}/> )} </div>)}
-                {addTodo && <Popup content={<>
-                <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
-                <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
-                <button id="finishedAdding" style={{height: "60px", width: "100px", marginTop: "20px"}} onClick={todoAdded}> Done </button>
-                </>} handleClose={popupClosed}></Popup>}
-            </header>
-            </div>
-        );
-    }
+      return (
+          <div className="App">
+          <header className="App-header">
+              <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={popupClosed}> Add Todo </button>
+              
+              {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
+              {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
+              backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
+              indexInList={todos.index}/> )} </div>)}
+              {addTodo && <Popup content={<>
+              <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
+              <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
+              <button id="finishedAdding" style={{height: "60px", width: "100px", marginTop: "20px"}} onClick={todoAdded}> Done </button>
+              </>} handleClose={popupClosed}></Popup>}
+          </header>
+          </div>
+      );
+  }
 
