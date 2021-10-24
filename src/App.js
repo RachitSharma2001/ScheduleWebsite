@@ -1,10 +1,10 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import PublicNav from './PublicNav.jsx';
-import PrivateNav from './PrivateNav.jsx';
-import Home from './Home.jsx';
-import SignUp from './CreateAccount.jsx';
-import LogIn from './LogIn.jsx';
+import PublicNav from './components/PublicNav.jsx';
+import PrivateNav from './components/PrivateNav.jsx';
+import Home from './components/Home.jsx';
+import SignUp from './components/CreateAccount.jsx';
+import LogIn from './components/LogIn.jsx';
 
 function App(){
   // Get the token that is stored in browser history

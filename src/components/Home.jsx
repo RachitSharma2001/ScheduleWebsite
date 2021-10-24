@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup.jsx';
 import EntryForm from './EntryForm.jsx';
-import './App.css';
+import '../App.css';
 import './Popup.css';
 import './TodoBox.css';
 import './TodoEntry.css';
