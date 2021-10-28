@@ -10,7 +10,7 @@ A potential user who does not have an account can sign up on the sign up page: <
 
 Once the user has signed up and logged in, they are directed to their personal dashboard, where they can start adding todos: <img src="images/AddTodo.PNG" style="display: block; margin: auto;" />
 
-As you can see, they can add their todos for a day. Each todo block is labeled by the date of creation. Once a user finishes some of their todos, just by clicking on the text, they can cross them out: <img src="images/Todolist2.PNG" style="display: block; margin: auto;" />
+As you can see, they can add their todos for a day. Each todo block is labeled by the date of creation. Once a user finishes some of their todos, just by clicking on the text, they can cross them out: <img src="images/Todolist3.PNG" style="display: block; margin: auto;" />
 
 # How I made it
 There were three basic components of the website: the database, the backend REST api, and the front end.
