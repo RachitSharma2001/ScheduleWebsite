@@ -56,9 +56,11 @@ import './TodoEntry.css';
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
   }
 
+  // Function to render a non-pop-up todo
   function TodoBox(props){
     const { todos, todoList, setTodoList, entryUrl, setAddTodo, setTodoId} = props;
 
+    // Function called to render a popup based on an already-created todo
     const renderPopup = (e) => {
       setAddTodo(true);
       setTodoId(todos.id);
@@ -127,17 +129,10 @@ import './TodoEntry.css';
           updateTodos(todoList, setTodoList, todoUrl);
       };
 
-      // Function to create a popup of an already-existing todolist
-      const renderPopup = () => {
-        setAddTodo(!addTodo);
-        setTodoId()
-      }
-
       return (
           <div className="App">
           <header className="App-header">
               <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={popupClosed}> Add Todo </button>
-              
               {todoList.map((todos) => <TodoBox todos={todos} todoList={todoList} setTodoList={setTodoList} 
               entryUrl={entryUrl} setAddTodo={setAddTodo} setTodoId={setTodoId}/>)}
               {addTodo && <Popup content={<>
