@@ -56,6 +56,23 @@ import './TodoEntry.css';
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}> {entryId+1}.&nbsp;&nbsp;{text} </button></div>)
   }
 
+  function TodoBox(props){
+    const { todos, todoList, setTodoList, entryUrl, setAddTodo, setTodoId} = props;
+
+    const renderPopup = (e) => {
+      setAddTodo(true);
+      setTodoId(todos.id);
+    }
+
+    return (<div className="todoBordBox"> 
+    
+    <b style={{alignItems: 'center'}}> {todos.date} </b> 
+    <div style={{display: 'flex',  justifyContent:'right', alignItems:'right'}}> <button onClick={renderPopup}>+</button> </div>
+    {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
+    backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
+    indexInList={todos.index}/> )} </div>);
+  }
+
   export default function Home(props){
       // Boolean indicating if popup should show
       const [addTodo, setAddTodo] = useState(false); 
@@ -94,7 +111,6 @@ import './TodoEntry.css';
           }
       };
 
-
       const updatePopupEntryList = (entryText) => {
           setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
       }
@@ -106,15 +122,19 @@ import './TodoEntry.css';
           updateTodos(todoList, setTodoList, todoUrl);
       };
 
+      // Function to create a popup of an already-existing todolist
+      const renderPopup = () => {
+        setAddTodo(!addTodo);
+        setTodoId()
+      }
+
       return (
           <div className="App">
           <header className="App-header">
               <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={popupClosed}> Add Todo </button>
               
-              {todoList.map((todos) => <div className="todoBordBox"> <b style={{alignItems: 'center'}}> {todos.date} </b> 
-              {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
-              backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
-              indexInList={todos.index}/> )} </div>)}
+              {todoList.map((todos) => <TodoBox todos={todos} todoList={todoList} setTodoList={setTodoList} 
+              entryUrl={entryUrl} setAddTodo={setAddTodo} setTodoId={setTodoId}/>)}
               {addTodo && <Popup content={<>
               <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
               <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
