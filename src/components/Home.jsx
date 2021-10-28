@@ -64,13 +64,18 @@ import './TodoEntry.css';
       setTodoId(todos.id);
     }
 
-    return (<div className="todoBordBox"> 
-    
-    <b style={{alignItems: 'center'}}> {todos.date} </b> 
-    <div style={{display: 'flex',  justifyContent:'right', alignItems:'right'}}> <button onClick={renderPopup}>+</button> </div>
-    {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
-    backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
-    indexInList={todos.index}/> )} </div>);
+    return (<div className="todoBordBox">
+      <div>
+        <b class="alignLeft"> {todos.date} </b>
+        <button class="alignRight" onClick={renderPopup}>+</button>
+        <div style={{clear:"both"}}/>
+      </div>
+      <div>
+        {todos.entries.map((entry) => <TodoEntry text={entry.text} todoId={todos.id} entryId={entry.id} crossOut={entry.crossedOut} 
+        backendUrl={entryUrl} todoList={todoList} setTodoList={setTodoList} 
+        indexInList={todos.index}/> )} 
+      </div>
+    </div>);
   }
 
   export default function Home(props){

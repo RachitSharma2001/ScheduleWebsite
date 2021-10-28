@@ -21,3 +21,10 @@
     text-align: left;
     color: black;
   }
+.alignLeft {
+    float: left;
+}
+.alignRight {
+    float: right;
+}
+
