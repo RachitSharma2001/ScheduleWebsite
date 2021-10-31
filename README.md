@@ -1,6 +1,6 @@
 # Personal Todolist website
 Hosted on: https://personal-daily-todolist.herokuapp.com/
-This site was created largely for myself: Every day I used to write down the things that I had to do. This would be time consuming and would often be something I dreaded doing every night. One day, I realized that if I typed them out on some platform, and designed that platform to have custom features that fit my specific needs, then I could finish writing todos in as little as 2 minutes. Now, this is exackly the case: the site is so well designed towards my specific needs that writing todos no longer takes the 15-20 minutes that it used to!
+This site was created largely for myself. Every night, I would write down the things I had to do for the next day. This would be time consuming, and I usually dreaded this activity. One day, I realized that if I typed them out on some platform, and designed that platform to have custom features that fit my specific needs, then I could finish writing todos in as little as 2 minutes. Now, this is exactly the case: the site is so well designed towards my specific needs that writing todos no longer takes the 15-20 minutes that it used to! 
 
 # Frameworks used
 React JS in front end + Python Flask in backend + sqlite3 for the database.
