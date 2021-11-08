@@ -16,6 +16,7 @@ class EntryApi(Resource):
         db.session.add(newEntry)
         db.session.commit()
         return {}, 200
+    
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('todoId', required=True)
@@ -26,7 +27,45 @@ class EntryApi(Resource):
         db.session.commit()
         return {}, 200
 
+class UserApi(Resource):
+    
+    def createNewUser(self, email, password):
+        userId = len(User.query.all()) + 1
+        newUser = User(id=userId, email=email, password=password)
+        db.session.add(newUser)
+        db.session.commit()
+        return userId
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', required=True)
+        parser.add_argument('password', required=True)
+        argDict = parser.parse_args()
+    
+        userWithEmail = User.query.filter_by(email=argDict['email']).first()
+        userWithPass = User.query.filter_by(email=argDict['email'], password=argDict['password']).first()
+
+        if userWithEmail == None:
+            return {"failure" : "email"}, 401
+        elif userWithPass == None:
+            return {"failure" : "password"}, 401
+        else:
+            return {"userId" : userWithPass.id}, 200
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', required=True)
+        parser.add_argument('password', required=True)
+        argDict = parser.parse_args()
+        newUserId = self.createNewUser(argDict['email'], argDict['password'])
+        return {}, 200
+
+class TodoApi(Resource):
+    pass
+
 api.add_resource(EntryApi, '/entry')
+api.add_resource(UserApi, '/user')
+api.add_resource(TodoApi, '/todo')
 
 
 # ''' Functions to create jsons given parameters '''
