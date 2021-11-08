@@ -61,7 +61,43 @@ class UserApi(Resource):
         return {}, 200
 
 class TodoApi(Resource):
-    pass
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('userId', required=True)
+        argDict = parser.parse_args()
+
+        user = User.query.get(argDict['userId'])
+        if user == None:
+            return {'failure':'User does not exist'}, 401
+        todoList = user.getTodosOfUser()
+        if todoList == None:
+            return {'failure':'Todolist does not exist'}, 401
+
+        todoEntryList = []
+        dateList = []
+        idList = []
+        crossedOutList = []
+        for todo in todoList:
+            todoEntryList.append(todo.getEntries())
+            dateList.append(todo.getDate())
+            idList.append(todo.id)
+        return {"idList":idList, "todoList":todoEntryList, "dateList":dateList}, 200
+    
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('userId', required=True)
+        argDict = parser.parse_args()
+
+        if User.query.get(argDict['userId']) == None:
+            return {'failure':'User does not exist'}, 401
+
+        todoId = len(Todo.query.all()) + 1
+        date = datetime.now()
+        newTodo = Todo(id=todoId, dateOfTodo=date, userOfTodo=argDict['userId'])
+        db.session.add(newTodo)
+        db.session.commit()
+        return {}, 200
+        
 
 api.add_resource(EntryApi, '/entry')
 api.add_resource(UserApi, '/user')
