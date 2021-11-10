@@ -15,7 +15,7 @@ class EntryApi(Resource):
         newEntry = Entry(entryContent=argDict['entryTitle'], referenceTodo=argDict['todoId'])
         db.session.add(newEntry)
         db.session.commit()
-        return {}, 200
+        return {}, 204
     
     def put(self):
         parser = reqparse.RequestParser()
@@ -25,7 +25,8 @@ class EntryApi(Resource):
         entry = Todo.query.get(int(argDict['todoId'])).getEntry(int(argDict['entryId']))
         entry.setCrossedOut()
         db.session.commit()
-        return {}, 200
+        # Its good practice, on successful update, to return the updated object
+        return {}, 204
 
 class UserApi(Resource):
     
@@ -46,9 +47,9 @@ class UserApi(Resource):
         userWithPass = User.query.filter_by(email=argDict['email'], password=argDict['password']).first()
 
         if userWithEmail == None:
-            return {"failure" : "email"}, 401
+            return {"failure" : "email"}, 404
         elif userWithPass == None:
-            return {"failure" : "password"}, 401
+            return {"failure" : "password"}, 404
         else:
             return {"userId" : userWithPass.id}, 200
 
@@ -68,10 +69,10 @@ class TodoApi(Resource):
 
         user = User.query.get(argDict['userId'])
         if user == None:
-            return {'failure':'User does not exist'}, 401
+            return {'failure':'User does not exist'}, 404
         todoList = user.getTodosOfUser()
         if todoList == None:
-            return {'failure':'Todolist does not exist'}, 401
+            return {'failure':'Todolist does not exist'}, 404
 
         todoEntryList = []
         dateList = []
@@ -89,19 +90,18 @@ class TodoApi(Resource):
         argDict = parser.parse_args()
 
         if User.query.get(argDict['userId']) == None:
-            return {'failure':'User does not exist'}, 401
+            return {'failure':'User does not exist'}, 404
 
         todoId = len(Todo.query.all()) + 1
         date = datetime.now()
         newTodo = Todo(id=todoId, dateOfTodo=date, userOfTodo=argDict['userId'])
         db.session.add(newTodo)
         db.session.commit()
-        return {}, 200
-        
+        return {}, 204
 
-api.add_resource(EntryApi, '/entry')
-api.add_resource(UserApi, '/user')
-api.add_resource(TodoApi, '/todo')
+api.add_resource(EntryApi, '/v2/entries')
+api.add_resource(UserApi, '/v2/users')
+api.add_resource(TodoApi, '/v2/todos')
 
 
 # ''' Functions to create jsons given parameters '''
