@@ -21,13 +21,17 @@ export default function LogIn(props) {
     // Function called when user clicks sign in button
     const authenticateUser = () => {
         // Call backend to verify if user exists
-        fetch(props.backEndUrl + "/user/" + email + "/" + password).then(res => res.json()).then(data => {
+        fetch(props.backEndUrl + "/users?email=" + email + "&password=" + password).then(res => res.json()).then(data => {
             // Check if user exists
-            if(data.message == "fail"){
-                // Entered email or password is incorrect
-                console.log("Wrong Email or Password");
+            if(data.failure == "email"){
+                // Entered email is incorrect
+                console.log("Wrong Email");
                 setWrongInfo(true);
-            }else{
+            }else if(data.failure == "password"){
+                console.log("Wrong Password");
+                setWrongInfo(true);
+            }
+            else{
                 // Call parent function, which will redirect client
                 props.saveTokenFunc(data.userId);
                 setWrongInfo(false);

@@ -9,10 +9,8 @@ export default function EntryForm(props){
         // Empty the input field
         document.getElementById("EntrySubmit").value="";
         submitCallBack(title);
-        let postUrl = url + title + "/" + todoId;
-        fetch(postUrl, {method: "POST"}).then(res => res.json()).then(data => {
-            console.log("Returned message: " + data.message);
-        });
+        let postUrl = url + "?entryTitle=" + title + "&todoId=" + todoId;
+        fetch(postUrl, {method: "POST"});
     }
 
     const handleTitleChange = (event) => {

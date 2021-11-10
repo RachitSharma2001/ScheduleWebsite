@@ -15,18 +15,19 @@ function SignUp(props) {
 
     // Function to check if data returned from server indicates
     // user exists or not
-    const userNotExist = (returnMessage, returnReason) => {
-        return returnMessage == "fail" && returnReason == "email";
+    const userNotExist = (failureType) => {
+        console.log("In userNotExist, here is the failureType: " + failureType);
+        return failureType == "email";
     }
 
     // Function called when user created
     const createUser = () => {
         // Link to backend api
-        let createUserUrl = givenUrl + "/user/" + email + "/" + password;
+        let createUserUrl = givenUrl + "/users?email=" + email + "&password=" + password;
         // Get information about user from backend
         fetch(createUserUrl, {method:"GET"}).then(res => res.json()).then(data => {
             // Check if user already exists or not
-            if(userNotExist(data.message, data.reason)){
+            if(userNotExist(data.failure)){
                 // If the user doesn't exist, create user
                 fetch(createUserUrl, {method:"POST"}).then(res => res.json()).then(data => {
                     // Tell user sign up successful

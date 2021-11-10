@@ -7,6 +7,7 @@ import SignUp from './components/CreateAccount.jsx';
 import LogIn from './components/LogIn.jsx';
 
 function App(){
+  
   // Get the token that is stored in browser history
   const getToken = () => {
     const tokenString = localStorage.getItem('token');
@@ -17,8 +18,8 @@ function App(){
   // Set token saved in browser as react hook
   const [token, setToken] = useState(getToken());
   // Server url
-  let backEndUrl = "https://rachitsharma2001.pythonanywhere.com/api";
-  //let backEndUrl = "http://127.0.0.1:5000/api";
+  //let backEndUrl = "https://rachitsharma2001.pythonanywhere.com/api";
+  let backEndUrl = "http://127.0.0.1:5000/v2";
 
   // Function called when user signs in successfully
   const saveToken = (userToken) => {
@@ -63,6 +64,7 @@ function App(){
       </Router>
     </div>
   )
+  return (<div></div>)
 }
 
 export default App;
