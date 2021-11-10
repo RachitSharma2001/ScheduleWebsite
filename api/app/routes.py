@@ -97,7 +97,7 @@ class TodoApi(Resource):
         newTodo = Todo(id=todoId, dateOfTodo=date, userOfTodo=argDict['userId'])
         db.session.add(newTodo)
         db.session.commit()
-        return {"todoId" : todoId}, 200
+        return {"todoId" : todoId, "date":date.strftime("%D")}, 200
 
 api.add_resource(EntryApi, '/v2/entries')
 api.add_resource(UserApi, '/v2/users')

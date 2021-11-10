@@ -1,10 +1,10 @@
 import { React, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import PublicNav from './components/PublicNav.jsx';
-import PrivateNav from './components/PrivateNav.jsx';
-import Home from './components/Home.jsx';
-import SignUp from './components/CreateAccount.jsx';
-import LogIn from './components/LogIn.jsx';
+import PublicNav from './components/PublicView/PublicNav.jsx';
+import PrivateNav from './components/PublicView/PrivateNav.jsx';
+import Home from './components/UserView/Home.jsx';
+import SignUp from './components/PublicView/CreateAccount.jsx';
+import LogIn from './components/PublicView/LogIn.jsx';
 
 function App(){
   

@@ -1,6 +1,5 @@
 import {React, useState} from 'react';
 import './TodoBox.css';
-import './TodoEntry.css';
 
 // Functional component defining particular entry of a Todolist
 function TodoEntry(props){
@@ -13,10 +12,12 @@ function TodoEntry(props){
     // Render UI on screen
     return (<div> <button className="TodoEntry" style={{textDecoration:crossOut}} onClick={setCrossedOut}>{text}</button></div>)
 }
-  
+
+// Functional component defining a box with todo entries
 export default function TodoBox(props){
     const { todos, entryUrl, entryCrossedOut, renderExistingPopup} = props;
-  
+    
+    // Call parent function that creates popup to the screen
     const makePopup = () => {
         renderExistingPopup(todos.id);
     }

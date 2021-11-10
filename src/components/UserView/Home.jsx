@@ -2,15 +2,35 @@ import React, { useState, useEffect } from 'react';
 import Popup from './Popup.jsx';
 import EntryForm from './EntryForm.jsx';
 import TodoBox from './TodoBox.jsx';
-import '../App.css';
+import '../../App.css';
 import './Popup.css';
-import './TodoEntry.css';
 
-// Function to update todolist
-function updateTodos(todoList, setTodoList, todoUrl){
-  console.log("The todo url: " + todoUrl);
-  // Get all the todos and important information related to them
-  fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
+export default function Home(props){
+  // Boolean indicating if popup should show
+  const [addTodo, setAddTodo] = useState(false); 
+  // List of entries of the todo in the current popup windowd
+  const [entryList, setEntryList] = useState([]);
+  // List of entries for each todo
+  const [todoList, setTodoList] = useState([]);
+  // Current todo id (needed as a parameter to entryform)
+  const [currTodoId, setTodoId] = useState("-1");
+  // Variable holding user id
+  const userId = props.userId;
+  // Variable holding url of backend
+  let baseApi = props.backEndUrl;
+  // Variables holding important backend routes
+  let todoUrl = baseApi + "/todos?userId=" + userId;
+  let entryUrl = baseApi + "/entries"
+  // Variable holding date of current todo
+  let dateString = "";
+  
+  // Display the current todos right when user loads window
+  useEffect(() => {
+      updateTodos(todoList, setTodoList, todoUrl);
+  }, []);
+
+  const updateTodos = () => {
+    fetch(todoUrl, {method: "GET"}).then(res => res.json()).then(data => {
       let tempTodoList = [];
       let numItemsAdded = 0;
       // Go through each todo from most recent to oldest
@@ -32,61 +52,46 @@ function updateTodos(todoList, setTodoList, todoUrl){
       }
       
       setTodoList(todoList => tempTodoList);
-  });
-}
-
-export default function Home(props){
-  // Boolean indicating if popup should show
-  const [addTodo, setAddTodo] = useState(false); 
-  // List of entries of the todo in the current popup windowd
-  const [entryList, setEntryList] = useState([]);
-  // List of entries for each todo
-  const [todoList, setTodoList] = useState([]);
-  // Current todo id (needed as a parameter to entryform)
-  const [currTodoId, setTodoId] = useState("-1");
-  // Variable holding user id
-  const userId = props.userId;
-  // Variable holding url of backend
-  let baseApi = props.backEndUrl;
-  // Variables holding important backend routes
-  let todoUrl = baseApi + "/todos?userId=" + userId;
-  let entryUrl = baseApi + "/entries"
-  
-  // Display the current todos right when user loads window
-  useEffect(() => {
-      updateTodos(todoList, setTodoList, todoUrl);
-  }, []);
-
-  const renderNewPopup = () => {
-    fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
-        // update current todo id
-        setTodoId(data.todoId.toString());
-        // Wait for the todo id to be created before adding the todo
-        setAddTodo(!addTodo);
     });
   }
 
+  // Renders popup to screen when user clicks to make a new todo
+  const renderNewPopup = () => {
+    fetch(todoUrl, {method: "POST"}).then(res => res.json()).then(data => {
+        dateString = data.date;
+        // update current todo id
+        setTodoId(data.todoId.toString());
+        // Wait for the todo id to be created before adding the todo
+        setAddTodo(true);
+    });
+  }
+
+  // Renders popup to screen when user decides to add an new entry to existing todo
   const renderExistingPopup = (todoId) => {
     setAddTodo(true);
     setTodoId(todoId);
   }
 
+  // Closes an existing popup
   const closePopup = () => {
+    dateString = "";
     setAddTodo(false);
     setEntryList([]);
   }
 
+  // Edits entries on existing popup
   const updatePopupEntryList = (entryText) => {
-      setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText}])
+      setEntryList(entryList => [...entryList, {id:entryList.length, text:entryText, crossedOut:false}])
   }
 
   const todoAdded = () => {
-      // Close popup
-      closePopup();
-      // Call function to update the todos
-      updateTodos(todoList, setTodoList, todoUrl);
+    // Close popup
+    closePopup();
+    // Call function to update the todos
+    updateTodos(todoList, setTodoList, todoUrl);
   };
 
+  // Function called when user clicks on entry to cross it out
   const entryCrossedOut = (indexInList, entryId) => {
     todoList[indexInList].entries[entryId].crossedOut = "line-through";
     setTodoList([...todoList]);
@@ -96,12 +101,11 @@ export default function Home(props){
       <div className="App">
       <header className="App-header">
           <button id="TodoAdd" style={{height: "60px", width: "200px", marginTop: "50px"}} onClick={renderNewPopup}> Add Todo </button>
-          {todoList.map((todos) => <TodoBox todos={todos}
-          entryUrl={entryUrl} entryCrossedOut={entryCrossedOut} renderExistingPopup={renderExistingPopup}/>)}
+          {todoList.map((todos) => <TodoBox todos={todos} entryUrl={entryUrl} entryCrossedOut={entryCrossedOut} 
+            renderExistingPopup={renderExistingPopup}/>)}
           {addTodo && <Popup content={<>
           <ul> {entryList.map((entry) => <li key = {entry.id}> {entry.text} </li>)} </ul>
-          <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList}/>
-          <button id="finishedAdding" style={{height: "60px", width: "100px", marginTop: "20px"}} onClick={todoAdded}> Done </button>
+          <EntryForm url={entryUrl} todoId={currTodoId} submitCallBack={updatePopupEntryList} todoAdded={todoAdded}/>
           </>} handleClose={closePopup}></Popup>}
       </header>
       </div>
